@@ -2,8 +2,9 @@
 import { useRecogniserStore } from '#/store';
 import { useState } from 'react';
 import { Textarea } from './shared/Input';
-import { ApolloProvider, useQuery } from '@apollo/client';
+import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import { client } from '../apolo-client';
+import { CREATE_NOTE, GET_NOTES } from '#/gql';
 
 const listener = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognizer = new listener();
@@ -39,45 +40,58 @@ export default function Home() {
 		}
 	};
 
-  useQuery
+	const { data, loading, error, networkStatus, refetch } = useQuery(GET_NOTES);
+	const [creatNote] = useMutation(CREATE_NOTE)
+	const notes = data?.notes?.data;
 
 	const onCahge = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setNote(e.target.value);
 	};
+	const handelSendNote = () => {
+		creatNote({variables: {note}})
+		refetch()
+	}
 
 	console.log(recognizer);
 
 	console.log('render');
 	return (
 		<ApolloProvider client={client}>
-    
-		<main className='flex min-h-screen flex-col items-center p-24'>
-			<div className='flex gap-4'>
-				<button
-					onClick={clear}
-					className='p-4 bg-red-600 rounded-2xl font-extrabold'>
-					Удалить
-				</button>
-				<button
-					onClick={stop}
-					className='p-4 bg-yellow-800 rounded-2xl font-extrabold'>
-					Стоп
-				</button>
-				<button
-					onClick={speech}
-					className='p-4 bg-green-600 rounded-2xl font-extrabold'>
-					Запись
-				</button>
-			</div>
+			<main className='flex min-h-screen flex-col items-center p-24'>
+				<div className='flex gap-4'>
+					<button
+						onClick={clear}
+						className='p-4 bg-red-600 rounded-2xl font-extrabold'>
+						Удалить
+					</button>
+					<button
+						onClick={stop}
+						className='p-4 bg-yellow-800 rounded-2xl font-extrabold'>
+						Стоп
+					</button>
+					<button
+						onClick={speech}
+						className='p-4 bg-green-600 rounded-2xl font-extrabold'>
+						Запись
+					</button>
+				</div>
 
-			<Textarea
-				label='First input'
-				value={note}
-				placeholder='say something'
-				onChange={onCahge}
-			/>
-		</main>
+				<Textarea
+					label='First input'
+					value={note}
+					placeholder='say something'
+					onChange={onCahge}
+				/>
+				<button onClick={handelSendNote}>Отправить в БД</button>
+				<ul>
+					{notes &&
+						notes.map((item) => (
+							<li key={item.id}>
+								{item.id + ' ' + item.attributes.content}
+							</li>
+						))}
+				</ul>
+			</main>
 		</ApolloProvider>
-
 	);
 }

@@ -368,15 +368,15 @@ export interface ApiNoteNote extends Schema.CollectionType {
     singularName: 'note';
     pluralName: 'notes';
     displayName: 'Note';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     content: Attribute.Text & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
