@@ -1,34 +1,28 @@
 'use client';
 import { useRecogniserStore } from '#/store';
 import { useState } from 'react';
-import { Textarea } from './shared/Input';
+import { Textarea } from '../components/shared/Input';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import { client } from '#/apolo-client';
 import { CREATE_NOTE, GET_NOTES } from '#/gql';
+import { NotesList } from '../components/widgets/NotesList';
 
-const listener = window.webkitSpeechRecognition;
-const recognizer = new listener();
-
-export default function Home() {
-	const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-	recognizer.lang = 'ru-RU';
+const listener= window.webkitSpeechRecognition;
+const recognizer: SpeechRecognition  = new listener();
+recognizer.lang = 'ru-RU';
     recognizer.continuous = true;
 	recognizer.interimResults = true;
-
 	function speech() {
 		// Начинаем слушать микрофон и распознавать голос
 		recognizer.start();
-		setIsSpeaking(true);
 	}
 	function stop() {
 		recognizer.stop();
 		recognizer.abort();
 	}
 
-	function clear() {
-		recognizer.abort();
-		setNote('');
-	}
+export default function Home() {
+	const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
 
 	const { note, setNote, clearNote } = useRecogniserStore((state) => state);
 
@@ -36,13 +30,13 @@ export default function Home() {
 		// Получаем результат распознавания
 		const result = event.results?.[event.resultIndex];
 		if (result.isFinal) {
-			setNote(prev => prev + '. ' + result[0].transcript);
+			setNote(note + '. ' + result[0].transcript);
 		}
 	};
 
-	const { data, loading, error, networkStatus, refetch } = useQuery(GET_NOTES);
+	const { refetch } = useQuery(GET_NOTES);
 	const [creatNote] = useMutation(CREATE_NOTE)
-	const notes = data?.notes?.data;
+	
 
 	const onCahge = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setNote(e.target.value);
@@ -52,15 +46,18 @@ export default function Home() {
 		refetch()
 	}
 
-	console.log(recognizer);
+const onClear = () => {
+	clearNote();
+	stop();
+};
 
-	console.log('render');
+
 	return (
 		<ApolloProvider client={client}>
-			<main className='flex min-h-screen flex-col items-center p-24'>
+			<main className='flex min-h-screen flex-col items-center p-24 gap-8'>
 				<div className='flex gap-4'>
 					<button
-						onClick={clear}
+						onClick={onClear}
 						className='p-4 bg-red-600 rounded-2xl font-extrabold'>
 						Удалить
 					</button>
@@ -82,15 +79,7 @@ export default function Home() {
 					placeholder='say something'
 					onChange={onCahge}
 				/>
-				<button className={'bg-orange'} onClick={handelSendNote}>Отправить в БД</button>
-				<ul>
-					{notes &&
-						notes.map((item) => (
-							<li key={item.id}>
-								{item.id + ' ' + item.attributes.content}
-							</li>
-						))}
-				</ul>
+				<button className={'bg-orange-600 p-4 rounded-2xl font-extrabold w-full'} onClick={handelSendNote}>Отправить в БД</button>
 			</main>
 		</ApolloProvider>
 	);

@@ -24,7 +24,7 @@ export const Textarea = ({ label, className, onChange, placeholder, value }: Pro
 
 	if (!isRedact) {
 		return (
-			<div className={clsx('w-full p-2 flex flex-col gap-2', className)}>
+			<div className={clsx('w-full flex flex-col gap-2', className)}>
 				<div className='p-4 rounded-2xl text-black bg-white'>{textValue}</div>
 				<button
 					onClick={() => setIsRedact((prevState) => !prevState)}
@@ -36,7 +36,7 @@ export const Textarea = ({ label, className, onChange, placeholder, value }: Pro
 	}
 
 	return (
-		<div className={clsx('w-full h-[400px] p-2 flex flex-col gap-2', className)}>
+		<div className={clsx('w-full h-[400px] flex flex-col gap-2', className)}>
 			<label className='flex flex-col'>{label}: </label>
 			<textarea
 				onChange={onCahge}
