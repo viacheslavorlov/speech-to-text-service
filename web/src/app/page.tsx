@@ -3,15 +3,16 @@ import { useRecogniserStore } from '#/store';
 import { useState } from 'react';
 import { Textarea } from './shared/Input';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
-import { client } from '../apolo-client';
+import { client } from '#/apolo-client';
 import { CREATE_NOTE, GET_NOTES } from '#/gql';
 
-const listener = window.SpeechRecognition || window.webkitSpeechRecognition;
+const listener = window.webkitSpeechRecognition;
 const recognizer = new listener();
 
 export default function Home() {
 	const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
 	recognizer.lang = 'ru-RU';
+    recognizer.continuous = true;
 	recognizer.interimResults = true;
 
 	function speech() {
@@ -33,10 +34,9 @@ export default function Home() {
 
 	recognizer.onresult = (event) => {
 		// Получаем результат распознавания
-		const result = event.results[event.resultIndex];
+		const result = event.results?.[event.resultIndex];
 		if (result.isFinal) {
-			setNote(result[0].transcript);
-			console.log(note);
+			setNote(prev => prev + '. ' + result[0].transcript);
 		}
 	};
 
@@ -82,7 +82,7 @@ export default function Home() {
 					placeholder='say something'
 					onChange={onCahge}
 				/>
-				<button onClick={handelSendNote}>Отправить в БД</button>
+				<button className={'bg-orange'} onClick={handelSendNote}>Отправить в БД</button>
 				<ul>
 					{notes &&
 						notes.map((item) => (
