@@ -52,3 +52,16 @@ export const DELETE_NOTE = gql`
 		}
 	}
 `;
+
+export const UPDATE_NOTE = gql`
+	mutation UpdateNote($id: ID!, $content: String!) {
+		updateNote(id: $id, data: {content: $content}) {
+			data {
+				id
+				attributes {
+					content
+				}
+			}
+		}
+	}
+`;

@@ -1,11 +1,14 @@
-'use client'
+'use client';
 import { DELETE_NOTE, GET_NOTES } from '#/gql';
 import { useMutation, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { Button } from '../shared/ui/Button/Button';
 
 export const NotesList = () => {
-	const { data, loading, error, networkStatus } = useQuery(GET_NOTES);
+	const { data, loading, error, networkStatus, refetch } = useQuery(GET_NOTES, {
+		fetchPolicy: 'cache-and-network',
+	});
 	const notes = data?.notes.data;
 	const [deleteNote] = useMutation(DELETE_NOTE);
 	const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
@@ -19,11 +22,12 @@ export const NotesList = () => {
 		}
 	};
 
-	const onDeleteSelectedNotes = () => {
+	const onDeleteSelectedNotes = async () => {
 		selectedNotes.forEach(id => {
-			deleteNote({ variables: { id } });
+			deleteNote({ variables: { id: id } })
+			.then(()=> refetch())
+			.then(() => setSelectedNotes([])	)
 		});
-		setSelectedNotes([]);
 	};
 
 	if (loading) return <p>Loading...</p>;
@@ -44,25 +48,34 @@ export const NotesList = () => {
 						}) => (
 							<li
 								key={item.id}
-								className={'flex justify-between items-center gap-4'}>
-								<input
-									id={`note-${item.id}`}
-									type='checkbox'
-									name='delete-checkbox'
-									checked={selectedNotes.includes(item.id)}
-									onChange={() => handleNoteCheckboxChange(item.id)}
-								/>
-								{item.id + ' ' + item.attributes.content}{' '}
-								<Link className='bg-green-700' href={`notes/${item.id}`}>Подробно</Link>
+								className={'flex flex-col md:flex-row justify-between  items-center gap-4'}>
+								<div className='flex flex-col md:flex-row border-b w-full'>
+									<input
+										id={`note-${item.id}`}
+										type='checkbox'
+										name='delete-checkbox'
+										className='p-4 mr-4 hidden md:block'
+										checked={selectedNotes.includes(item.id)}
+										onChange={() => handleNoteCheckboxChange(item.id)}
+									/>
+									<p className='p-4'>{item.id}</p>
+									<p className='text-justify'>{item.attributes.content}</p>
+								</div>
+
+								<Link className='w-full md:w-auto' href={`notes/${item.id}`}>
+									<Button className='w-full md:w-auto'>Подробно</Button>
+								</Link>
 							</li>
 						)
 					)}
 			</ul>
-			<button
-				className='bg-red-700 rounded-2xl p-4 h-auto'
+			<Button
+				variant='danger'
+				rounded='m'
+				className='hidden md:block'
 				onClick={onDeleteSelectedNotes}>
 				Удалить выбранные
-			</button>
+			</Button>
 		</>
 	);
 };
