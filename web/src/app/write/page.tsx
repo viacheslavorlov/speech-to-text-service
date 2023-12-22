@@ -8,6 +8,7 @@ import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import { Delete, Mic, MicOff } from 'lucide-react';
 import { useState } from 'react';
 import { Textarea } from '../../components/shared/Textarea';
+import { replacer, sentenceModify } from '#/lib/textModifiers';
 
 const listener = window.webkitSpeechRecognition;
 const recognizer: SpeechRecognition = new listener();
@@ -79,12 +80,18 @@ export default function Home() {
 				</div>
 				<h2 className='text-4xl font-bold'>Результат</h2>
 				<Textarea
-					label='Результат'
 					value={note}
 					chengable
 					placeholder='say something'
 					onChange={onCahge}
 				/>
+				<div>
+					<Button onClick={() => {
+						console.log('работает')
+						setNote(sentenceModify(note.replace(/точка/g, ". ")))
+						}}>Форматировать</Button>
+					<Button>Добавить правила</Button>
+				</div>
 				<Button
 					variant='secondary'
 					onClick={handelSendNote}>

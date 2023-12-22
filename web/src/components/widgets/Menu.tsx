@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Container } from '../shared/ui/Container/Container';
 import clsx from 'clsx';
+import { LoadingSpinner } from '../shared/LoadingSpinner';
 
 export const Menu = () => {
 	const { isLoaded, user } = useUser();
@@ -11,7 +12,7 @@ export const Menu = () => {
 
 	return (
 		<Container className='p-4'>
-			<nav className='w-full justify-center gap-10 flex'>
+			<nav className='w-full justify-center align-center gap-10 flex'>
 				<Link
 					className={clsx(
 						`p-4 font-bold rounded-2xl`,
@@ -50,6 +51,7 @@ export const Menu = () => {
 						</div>
 					</>
 				)}
+				{!isLoaded && <LoadingSpinner/>}
 			</nav>
 		</Container>
 	);
