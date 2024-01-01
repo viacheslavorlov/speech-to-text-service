@@ -6,7 +6,7 @@ import { CREATE_NOTE, GET_NOTES } from '#/gql';
 import { useRecogniserStore } from '#/store';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client';
 import { Delete, Mic, MicOff } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Textarea } from '../../components/shared/Textarea';
 import { replacer, sentenceModify } from '#/lib/textModifiers';
 
@@ -20,6 +20,7 @@ function speech() {
 	recognizer.start();
 }
 function stop() {
+	// recognizer.
 	recognizer.stop();
 	recognizer.abort();
 }
@@ -33,7 +34,10 @@ export default function Home() {
 		// Получаем результат распознавания
 		const result = event.results?.[event.resultIndex];
 		if (result.isFinal) {
-			setNote(note + result[0].transcript);
+			if (result[0].transcript.includes('стоп')) {
+				stop()
+			}
+			setNote(note + '.' + result[0].transcript);
 		}
 	};
 
@@ -86,10 +90,13 @@ export default function Home() {
 					onChange={onCahge}
 				/>
 				<div>
-					<Button onClick={() => {
-						console.log('работает')
-						setNote(sentenceModify(note.replace(/точка/g, ". ")))
-						}}>Форматировать</Button>
+					<Button
+						onClick={() => {
+							console.log('работает');
+							setNote(sentenceModify(note.replace(/точка/g, '. ')));
+						}}>
+						Форматировать
+					</Button>
 					<Button>Добавить правила</Button>
 				</div>
 				<Button

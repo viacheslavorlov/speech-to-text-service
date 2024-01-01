@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { LoadingSpinner } from '../shared/LoadingSpinner';
 
 export const Menu = () => {
-	const { isLoaded, user } = useUser();
+	const { isLoaded, isSignedIn } = useUser();
 	const pathname = usePathname();
 
 	return (
@@ -24,7 +24,7 @@ export const Menu = () => {
 					href={'/write'}>
 					Главная
 				</Link>
-				{isLoaded && !user && (
+				{isLoaded && !isSignedIn && (
 					<Link
 						className={`p-4 font-bold  transition-all rounded-2xl hover:scale-105 ${
 							pathname === '/login'
@@ -35,7 +35,7 @@ export const Menu = () => {
 						Войти
 					</Link>
 				)}
-				{isLoaded && user && (
+				{isLoaded && isSignedIn && (
 					<>
 						<Link
 							className={`p-4 font-bold hover:scale-105  transition-all rounded-2xl ${
