@@ -1,3 +1,5 @@
+'use client'
+
 class Recognizer {
 	private recognizer: SpeechRecognition;
 	private saveResultFunc: (str: string) => void;
@@ -44,6 +46,5 @@ class Recognizer {
 		this.recognizer.abort();
 	};
 }
-const recognizer = new Recognizer();
 
-export { recognizer };
+export default Recognizer;
