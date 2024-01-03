@@ -25,8 +25,8 @@ export const NotesList = () => {
 	const onDeleteSelectedNotes = async () => {
 		selectedNotes.forEach(id => {
 			deleteNote({ variables: { id: id } })
-			.then(()=> refetch())
-			.then(() => setSelectedNotes([])	)
+				.then(() => refetch())
+				.then(() => setSelectedNotes([]));
 		});
 	};
 
@@ -48,7 +48,9 @@ export const NotesList = () => {
 						}) => (
 							<li
 								key={item.id}
-								className={'flex flex-col md:flex-row justify-between  items-center gap-4'}>
+								className={
+									'flex flex-col md:flex-row justify-between  items-center gap-4'
+								}>
 								<div className='flex flex-col md:flex-row border-b w-full'>
 									<input
 										id={`note-${item.id}`}
@@ -62,7 +64,9 @@ export const NotesList = () => {
 									<p className='text-justify'>{item.attributes.content}</p>
 								</div>
 
-								<Link className='w-full md:w-auto' href={`notes/${item.id}`}>
+								<Link
+									className='w-full md:w-auto'
+									href={`notes/${item.id}`}>
 									<Button className='w-full md:w-auto'>Подробно</Button>
 								</Link>
 							</li>

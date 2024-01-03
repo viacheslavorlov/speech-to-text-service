@@ -17,7 +17,7 @@ class Recognizer {
 			const result = event.results?.[event.resultIndex];
 	
 			if (result.isFinal) {
-				if (result[0].transcript.includes('стоп')) {
+				if (result[0].transcript.toLowerCase().includes('стоп') ) {
 					this.stop();
 					return
 				}

@@ -1,21 +1,143 @@
 'use client';
-import { LoadingSpinner } from '#/components/shared/LoadingSpinner';
 import { Container } from '#/components/shared/ui/Container/Container';
-import { useUser } from '@clerk/nextjs';
-import { Suspense } from 'react';
+import { loginUser } from '#/lib/login/login';
+import { useUser } from '#/lib/login/userStore';
+// import { useUser } from '@clerk/nextjs';
+import { Suspense, SyntheticEvent, useState } from 'react';
+import { Button } from '../../components/shared/ui/Button/Button';
+import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
+import { registerUser } from '#/lib/login/register';
 
 export default function Login() {
-	const { user, isLoaded } = useUser();
-	return (
-		<Suspense>
+	const { username, jwt, setJwt, setUsername, setUserEmail } = useUser();
+	const [formData, setFormData] = useState({ identifier: '', password: '' });
+	const [registerData, setRegisterData] = useState({ email: '', username: '', password: '' });
+	const [login, setLogin] = useState(true);
+	const [error, setError] = useState('');
+
+	const handleSubmit = async (e: SyntheticEvent) => {
+		e.preventDefault(); // Prevent the default form submission behavior
+		if (!formData.identifier || !formData.password) {
+			setError('Заполните все поля формы')
+			return;
+		}
+		try {
+			const response = await loginUser(formData);
+			console.log(response);
+			if (response?.data?.jwt) {
+				setJwt(response.data.jwt);
+				setUsername(response.data.user.username);
+				setUserEmail(response.data.user.email);
+			} else if (response?.response?.data?.error?.message) {
+				setError(response?.response?.data?.error?.message);
+			}
+			// Handle the response and update the state or perform any other actions
+		} catch (error) {
+			console.log(error);
+			// Handle any errors that occur during the form submission
+		}
+	};
+
+	const handleRegister = async (e: SyntheticEvent) => {
+		e.preventDefault(); // Prevent the default form submission behavior
+		if (!registerData.email || !registerData.password || !registerData.username) {
+			setError('Заполните все поля формы')
+			return;
+		}
+		try {
+			const response = await registerUser(registerData);
+			console.log('front response', response);
+			if (response?.data?.jwt) {
+				setJwt(response?.data?.jwt);
+				setUsername(response?.data?.user?.username);
+				setUserEmail(response?.data?.user?.email);
+			} else if (response?.response?.data?.error?.message) {
+				setError(response?.response?.data?.error?.message);
+			}
+			// Handle the response and update the state or perform any other actions
+		} catch (error) {
+			console.log(error);
+			// Handle any errors that occur during the form submission
+		}
+	};
+
+	if (username && jwt) {
+		return (
 			<Container>
-				{isLoaded && user ? (
-					<h1 className='text-2xl text-center'>Вы авторизованы</h1>
+				<h1 className='text-2xl text-center'>Вы авторизованы</h1>
+			</Container>
+		);
+	}
+
+	return (
+		<Suspense
+			unstable_expectedLoadTime={1500}
+			fallback={<LoadingSpinner />}>
+			<Container>
+				{login ? (
+					<form
+						className='bg-slate-600 rounded-xl p-6 flex flex-col gap-2 justify-center items-center'
+						onSubmit={handleSubmit}>
+						<h1 className='text-2xl text-center'>Вход</h1>
+						<input
+							className='p-2 rounded-md text-black'
+							type='text'
+							name='identifier'
+							placeholder='email или имя пользователя'
+							value={formData.identifier}
+							onChange={e => setFormData({ ...formData, identifier: e.target.value })}
+						/>
+						<input
+							className='p-2 rounded-md text-black'
+							type='password'
+							name='password'
+							placeholder='пароль'
+							value={formData.password}
+							onChange={e => setFormData({ ...formData, password: e.target.value })}
+						/>
+						<Button type='submit'>Войти</Button>
+						<Button onClick={() => setLogin(false)}>Перейти к регистрации</Button>
+						{error && <p className='text-red-700'>{error}</p>}
+					</form>
 				) : (
-					<>
-						<h1 className='text-2xl text-center'>Идёт загрузка ...</h1>
-						<LoadingSpinner />
-					</>
+					<form
+						className='bg-slate-600 rounded-xl p-6 flex flex-col gap-2 justify-center items-center'
+						onSubmit={handleRegister}>
+						<h1 className='text-2xl text-center'>Регистрация</h1>
+						<input
+							className='p-2 rounded-md text-black'
+							type='text'
+							name='email'
+							placeholder='email'
+							value={registerData.email}
+							onChange={e =>
+								setRegisterData({ ...registerData, email: e.target.value })
+							}
+						/>
+						<input
+							className='p-2 rounded-md text-black'
+							type='text'
+							name='username'
+							placeholder='имя пользователя'
+							value={registerData.username}
+							onChange={e =>
+								setRegisterData({ ...registerData, username: e.target.value })
+							}
+						/>
+						<input
+							className='p-2 rounded-md text-black'
+							type='password'
+							name='password'
+							placeholder='пароль'
+							value={registerData.password}
+							onChange={e =>
+								setRegisterData({ ...registerData, password: e.target.value })
+							}
+						/>
+						<Button onClick={() => setLogin(true)}>Войти</Button>
+						<Button type='submit'>Зарегистрироваться</Button>
+						{error && <p className='text-red-700'>{error}</p>}
+					</form>
 				)}
 			</Container>
 		</Suspense>

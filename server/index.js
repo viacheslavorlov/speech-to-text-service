@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const Vosk = require('vosk');
+const cors = require('cors')
+
+app.use(cors())
 
 // Создаем экземпляр модели Vosk
 const model = new Vosk.Model('model');
@@ -13,19 +16,20 @@ const recognizer = new Vosk.Recognizer({ model: model });
 app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
 
 // Обработчик POST-запроса на распознавание речи
-app.post('/recognize', (req, res) => {
+app.post('/recognize', async (req, res) => {
   const data = req.body;
 
   // Декодируем аудио данные
   const buffer = Buffer.from(data, 'base64');
-  const audioData = new Uint8Array(buffer);
+  // const audioData = new Uint8Array(buffer);
 
   // Распознаем речь
-  recognizer.acceptWaveform(audioData);
-  const result = recognizer.result();
+  await recognizer.acceptWaveform(buffer);
+  const result = await recognizer.result();
 
   // Отправляем результат обратно
-  res.json(result);
+  console.log(result)
+  await res.json(result);
 });
 
 // Запускаем сервер на порту 4000

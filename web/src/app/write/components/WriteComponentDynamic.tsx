@@ -1,5 +1,7 @@
+import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
 import dynamic from 'next/dynamic';
 
 export const WriteComponentDynamic = dynamic(() => import('./WriteComponent'), {
-  ssr: false, // Disable server-side rendering for this component
+	loading: () => <LoadingSpinner />,
+	ssr: false, // Disable server-side rendering for this component
 });
