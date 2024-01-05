@@ -9,6 +9,14 @@ interface RecogniserState {
 	setTime: (time: Date) => void;
 }
 
+interface ServerRecogniserState {
+	note: string;
+	time: Date;
+	setNote: (note: string) => void;
+	clearNote: () => void;
+	setTime: (time: Date) => void;
+}
+
 export const useRecogniserStore = create<RecogniserState>()(
 	devtools(
 		persist(
@@ -21,6 +29,24 @@ export const useRecogniserStore = create<RecogniserState>()(
 			}),
 			{
 				name: 'note-storage',
+			}
+		)
+	)
+);
+
+
+export const useServerRecogniserStore = create<ServerRecogniserState>()(
+	devtools(
+		persist(
+			(set) => ({
+				note: '',
+				time: new Date (),
+				setNote: (note) => set({ note: note }),
+				clearNote: () => set({ note: '' }),
+				setTime: (time) => set({ time:  time }),
+			}),
+			{
+				name: 'server-note-storage',
 			}
 		)
 	)

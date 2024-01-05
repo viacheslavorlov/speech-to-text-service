@@ -18,7 +18,6 @@ export default function Home() {
 
 	const { note, setNote, clearNote } = useRecogniserStore(state => state);
 
-	const { refetch } = useQuery(GET_NOTES);
 	const [creatNote] = useMutation(CREATE_NOTE);
 
 	const onCahge = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -27,7 +26,6 @@ export default function Home() {
 
 	const handelSendNote = () => {
 		creatNote({ variables: { note } });
-		refetch();
 	};
 
 	useLayoutEffect(() => {

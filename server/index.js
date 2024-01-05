@@ -1,38 +1,68 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const Vosk = require('vosk');
-const cors = require('cors')
+const { v4: uuidv4 } = require('uuid');
+const vosk = require('vosk');
+const fs = require('fs');
+const { exec } = require('child_process');
+const app = express();
+const port = 4000;
 
-app.use(cors())
+// Load the Vosk model
+const model = new vosk.Model('model');
+const sampleRate = 16000;
 
-// Создаем экземпляр модели Vosk
-const model = new Vosk.Model('model');
+// Middleware
+app.use(cors());
+app.use(bodyParser.raw({ type: 'audio/webm', limit: '50mb' }));
 
-// Создаем экземпляр речевого распознавателя
-const recognizer = new Vosk.Recognizer({ model: model });
+// POST endpoint for audio transcription
+app.post('/transcribe', (req, res) => {
+  const audioData = req.body;
+  const webmFileName = `${uuidv4()}.webm`;
+  const wavFileName = webmFileName.replace('.webm', '.wav');
 
-// Настраиваем парсер для аудио данных
-app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
+  // Save the WebM audio to a file
+  fs.writeFileSync(webmFileName, audioData);
 
-// Обработчик POST-запроса на распознавание речи
-app.post('/recognize', async (req, res) => {
-  const data = req.body;
+  // Convert WebM to WAV using ffmpeg
+  exec(`ffmpeg -i ${webmFileName} -ac 1 -ar ${sampleRate} -f wav ${wavFileName}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error converting file: ${error.message}`);
+      return res.status(500).send('Error converting audio file');
+    }
 
-  // Декодируем аудио данные
-  const buffer = Buffer.from(data, 'base64');
-  // const audioData = new Uint8Array(buffer);
+    // Transcribe the WAV file
+    const rec = new vosk.Recognizer({model, sampleRate});
+    const stream = fs.createReadStream(wavFileName);
+    stream.on('data', (data) => {
+      if (!rec.acceptWaveform(data)) {
+        // continue processing, as this is not the final result
+        console.log('проблема не в стриме')
+      }
+    });
+    stream.on('end', () => {
+      const result = rec.finalResult();
+      console.log(result);
 
-  // Распознаем речь
-  await recognizer.acceptWaveform(buffer);
-  const result = await recognizer.result();
+      // Send the transcription result
+      res.json({ text: result.text });
 
-  // Отправляем результат обратно
-  console.log(result)
-  await res.json(result);
+      // Clean up temporary files
+      fs.unlinkSync(webmFileName);
+      fs.unlinkSync(wavFileName);
+
+      // Destroy the recognizer
+      rec.free();
+    });
+    stream.on('error', (streamError) => {
+      console.error(`Stream error: ${streamError.message}`);
+      res.status(500).send('Error transcribing audio file');
+    });
+  });
 });
 
-// Запускаем сервер на порту 4000
-app.listen(4000, () => {
-  console.log('Сервер запущен на порту 4000');
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
