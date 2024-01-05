@@ -1,15 +1,35 @@
-import axios from "axios";
+import axios, { AxiosResponse } from 'axios';
 
-export const registerUser = async (userData: { username: string; email: string; password: string }) => {
+interface UserData {
+	jwt: string;
+	user: {
+		username: string;
+		email: string;
+		password: string;
+		id: string | number;
+	};
+}
+
+type Props = {
+	username: string
+	email: string
+	password: string
+}
+
+export const registerUser = async (
+	userData: Props
+): Promise<AxiosResponse<UserData>['data'] | null > => {
 	try {
-		const data = await axios.post('http://localhost:1337/api/auth/local/register', userData);
-		const response = data;
-		if (response.data.jwt) {
-			return response;
+		const { data } = await axios.post<UserData>(
+			'http://localhost:1337/api/auth/local/register',
+			userData
+		);
+		if (data.jwt) {
+			return data;
 		}
 		return null;
 	} catch (e) {
 		console.log(e);
-		return e
+		return e.response;
 	}
 };

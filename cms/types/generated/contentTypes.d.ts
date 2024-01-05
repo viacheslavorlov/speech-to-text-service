@@ -375,6 +375,11 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
   attributes: {
     content: Attribute.Text & Attribute.Required;
+    user: Attribute.Relation<
+      'api::note.note',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
@@ -637,6 +642,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    notes: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::note.note'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

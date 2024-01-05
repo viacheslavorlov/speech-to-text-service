@@ -1,5 +1,3 @@
-'use client'
-
 class Recognizer {
 	private recognizer: SpeechRecognition;
 	private saveResultFunc: (str: string) => void;

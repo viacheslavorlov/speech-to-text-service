@@ -5,8 +5,10 @@ interface UseUserStore {
 	username: string;
 	email: string;
 	jwt: string;
+	id: string | number;
 	setUserEmail: (email: string) => void;
 	setUsername: (name: string) => void;
+	setId: (id: string | number) => void;
 	setJwt: (jwt: string) => void;
 	logOut: () => void;
 }
@@ -18,9 +20,11 @@ export const useUser = create<UseUserStore>()(
 				username: '',
 				email: '',
 				jwt: '',
+				id: '',
 				setUserEmail: email => set({ email: email }),
 				setUsername: name => set({ username: name }),
 				setJwt: jwt => set({ jwt: jwt }),
+				setId: id => set({ id: id }),
 				logOut: () => set({ username: '', email: '', jwt: '' }),
 			}),
 			{

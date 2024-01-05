@@ -20,13 +20,13 @@ export const Menu = () => {
 		router.replace('/');
 	};
 
-	useEffect(() => {
-		if (logedIn) {
-			setTimeout(() => {
-				router.replace('/write');
-			}, 2500);
-		}
-	}, [logedIn, router]);
+	// useEffect(() => {
+	// 	if (logedIn) {
+	// 		setTimeout(() => {
+	// 			router.replace('/write');
+	// 		}, 2500);
+	// 	}
+	// }, [logedIn]);
 
 	useEffect(() => {
 		if (username) {

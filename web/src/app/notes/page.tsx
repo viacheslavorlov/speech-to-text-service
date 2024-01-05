@@ -1,10 +1,9 @@
-"use client"
+'use client';
 import { Container } from '#/components/shared/ui/Container/Container';
-import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
-import { NotesList } from '#/components/widgets/NotesList';
+import { NotesListDynamic } from '#/components/widgets/NotesList/NotesListDynamic';
 import { useUser } from '#/lib/login/userStore';
 import { redirect } from 'next/navigation';
-import { Suspense, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 export default function Notes() {
 	const { username } = useUser();
@@ -16,9 +15,7 @@ export default function Notes() {
 	return (
 		<Container>
 			<h1 className='text-3xl font-bold'>Заметки</h1>
-			<Suspense fallback={<LoadingSpinner />}>
-				<NotesList />
-			</Suspense>
+			<NotesListDynamic />
 		</Container>
 	);
 }

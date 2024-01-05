@@ -15,6 +15,12 @@
     "content": {
       "type": "text",
       "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "notes"
     }
   }
 }

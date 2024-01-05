@@ -1,15 +1,15 @@
 'use client';
 import { Container } from '#/components/shared/ui/Container/Container';
+import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
 import { loginUser } from '#/lib/login/login';
+import { registerUser } from '#/lib/login/register';
 import { useUser } from '#/lib/login/userStore';
-// import { useUser } from '@clerk/nextjs';
+import Link from 'next/link';
 import { Suspense, SyntheticEvent, useState } from 'react';
 import { Button } from '../../components/shared/ui/Button/Button';
-import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
-import { registerUser } from '#/lib/login/register';
 
 export default function Login() {
-	const { username, jwt, setJwt, setUsername, setUserEmail } = useUser();
+	const { username, jwt, setId, setJwt, setUsername, setUserEmail } = useUser();
 	const [formData, setFormData] = useState({ identifier: '', password: '' });
 	const [registerData, setRegisterData] = useState({ email: '', username: '', password: '' });
 	const [login, setLogin] = useState(true);
@@ -18,7 +18,7 @@ export default function Login() {
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault(); // Prevent the default form submission behavior
 		if (!formData.identifier || !formData.password) {
-			setError('Заполните все поля формы')
+			setError('Заполните все поля формы');
 			return;
 		}
 		try {
@@ -28,6 +28,7 @@ export default function Login() {
 				setJwt(response.data.jwt);
 				setUsername(response.data.user.username);
 				setUserEmail(response.data.user.email);
+				setId(response.data.user.id);
 			} else if (response?.response?.data?.error?.message) {
 				setError(response?.response?.data?.error?.message);
 			}
@@ -41,18 +42,19 @@ export default function Login() {
 	const handleRegister = async (e: SyntheticEvent) => {
 		e.preventDefault(); // Prevent the default form submission behavior
 		if (!registerData.email || !registerData.password || !registerData.username) {
-			setError('Заполните все поля формы')
+			setError('Заполните все поля формы');
 			return;
 		}
 		try {
 			const response = await registerUser(registerData);
 			console.log('front response', response);
-			if (response?.data?.jwt) {
-				setJwt(response?.data?.jwt);
-				setUsername(response?.data?.user?.username);
-				setUserEmail(response?.data?.user?.email);
-			} else if (response?.response?.data?.error?.message) {
-				setError(response?.response?.data?.error?.message);
+			if (response?.jwt) {
+				setId(response.user.id);
+				setJwt(response.jwt);
+				setUsername(response?.user?.username);
+				setUserEmail(response?.user?.email);
+			} else if (response?.data?.error?.message) {
+				setError(response?.data?.error?.message);
 			}
 			// Handle the response and update the state or perform any other actions
 		} catch (error) {
@@ -63,8 +65,19 @@ export default function Login() {
 
 	if (username && jwt) {
 		return (
-			<Container>
+			<Container className=''>
 				<h1 className='text-2xl text-center'>Вы авторизованы</h1>
+				<Link
+					href={'/'}
+					className='text-xl bg-green-600 p-4 text-center rounded-md'>
+					{' '}
+					На главную
+				</Link>
+				<Link
+					href={'/write'}
+					className='text-xl bg-green-600 p-4 text-center rounded-md'>
+					Начать записывать
+				</Link>
 			</Container>
 		);
 	}

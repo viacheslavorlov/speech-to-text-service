@@ -14,25 +14,31 @@ import { useUser } from '#/lib/login/userStore';
 
 export default function Home() {
 	const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-	const { username } = useUser();
+	const { id, jwt } = useUser();
 
 	const { note, setNote, clearNote } = useRecogniserStore(state => state);
 
-	const [creatNote] = useMutation(CREATE_NOTE);
+	const [creatNote] = useMutation(CREATE_NOTE, {
+		context: {
+			headers: {
+				Authorization: `Bearer ${jwt}`
+			}
+		}
+	});
 
 	const onCahge = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setNote(e.target.value);
 	};
 
 	const handelSendNote = () => {
-		creatNote({ variables: { note } });
+		creatNote({ variables: { note, user: id } });
 	};
 
 	useLayoutEffect(() => {
-		if (!username) {
+		if (!id) {
 			redirect('/forbidden');
 		}
-	}, [username]);
+	}, [id]);
 
 	return (
 		<ApolloProvider client={client}>
