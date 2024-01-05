@@ -5,10 +5,14 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import { Button } from '../shared/ui/Button/Button';
-import { Container } from '../shared/ui/Container/Container';
+import { Button } from '../../shared/ui/Button/Button';
+import { Container } from '../../shared/ui/Container/Container';
+import { MenuIcon } from 'lucide-react';
+import { MoblileMenu } from './MobileMenu';
+import Image from 'next/image';
 
 export const Menu = () => {
+	const [showMenu, setShowMenu] = useState(false);
 	const [logedIn, setLogedIn] = useState(false);
 	const { username, logOut } = useUser();
 	const router = useRouter();
@@ -20,13 +24,9 @@ export const Menu = () => {
 		router.replace('/');
 	};
 
-	// useEffect(() => {
-	// 	if (logedIn) {
-	// 		setTimeout(() => {
-	// 			router.replace('/write');
-	// 		}, 2500);
-	// 	}
-	// }, [logedIn]);
+	const toggleMenu = () => {
+		setShowMenu(!showMenu);
+	};
 
 	useEffect(() => {
 		if (username) {
@@ -36,7 +36,33 @@ export const Menu = () => {
 	return (
 		<Container className='p-4'>
 			<Suspense fallback=''>
-				<nav className='w-full justify-center align-center gap-10 flex'>
+				<div className='flex justify-between items-center md:hidden'>
+					<Image
+						src={'/kandinsky-3-logo.png'}
+						width={300}
+						height={200}
+						alt='logo'
+						className='w-20 h-20 object-cover rounded-lg'
+					/>
+					<Button
+						onClick={toggleMenu}
+						className='w-16 h-16'>
+						<MenuIcon />
+					</Button>
+				</div>
+
+				<MoblileMenu
+					show={showMenu}
+					toggleMenu={toggleMenu}
+				/>
+				<nav className='hidden md:flex items-center w-full gap-8'>
+					<Image
+						src={'/kandinsky-3-logo.png'}
+						width={300}
+						height={200}
+						alt='logo'
+						className='w-20 h-20 object-cover rounded-2xl'
+					/>
 					<Link
 						className={clsx(
 							`p-4 font-bold rounded-2xl`,
@@ -46,7 +72,7 @@ export const Menu = () => {
 							'hover:scale-105 transition-all'
 						)}
 						href={'/write'}>
-						Главная
+						Запись
 					</Link>
 					<Link
 						className={`p-4 font-bold hover:scale-105  transition-all rounded-2xl ${
@@ -64,11 +90,11 @@ export const Menu = () => {
 								: 'bg-transparrent border border-slate-50'
 						}`}
 						href={'/write-to-server'}>
-						Записи через сервер
+						Запись через сервер
 					</Link>
 					{!logedIn ? (
 						<Link
-							className={`p-4 font-bold  transition-all rounded-2xl hover:scale-105 ${
+							className={`p-4 font-bold  transition-all rounded-2xl hover:scale-105 ml-auto ${
 								pathname === '/login'
 									? 'bg-green-700'
 									: 'bg-transparrent border border-slate-50'
@@ -79,7 +105,9 @@ export const Menu = () => {
 					) : (
 						<Button
 							variant='ghost'
-							className={'p-4 font-bold  transition-all rounded-2xl hover:scale-105'}
+							className={
+								'p-4 font-bold  transition-all rounded-2xl hover:scale-105 ml-auto'
+							}
 							onClick={onLogOut}>
 							Выйти
 						</Button>
