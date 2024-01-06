@@ -29,7 +29,9 @@ export default function Login() {
 				setUsername(response.data.user.username);
 				setUserEmail(response.data.user.email);
 				setId(response.data.user.id);
+				// @ts-ignore
 			} else if (response?.response?.data?.error?.message) {
+				// @ts-ignore
 				setError(response?.response?.data?.error?.message);
 			}
 			// Handle the response and update the state or perform any other actions
@@ -53,7 +55,9 @@ export default function Login() {
 				setJwt(response.jwt);
 				setUsername(response?.user?.username);
 				setUserEmail(response?.user?.email);
+				// @ts-ignore
 			} else if (response?.data?.error?.message) {
+				// @ts-ignore
 				setError(response?.data?.error?.message);
 			}
 			// Handle the response and update the state or perform any other actions

@@ -30,6 +30,8 @@ export const registerUser = async (
 		return null;
 	} catch (e) {
 		console.log(e);
+				// @ts-ignore
+
 		return e.response;
 	}
 };
