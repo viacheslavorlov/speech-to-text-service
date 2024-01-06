@@ -5,8 +5,8 @@ import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { CREATE_NOTE } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
-import { sentenceModify } from '#/lib/textModifiers';
-import { useRecogniserStore } from '#/store/recognizerStore';
+import { replacer, sentenceModify } from '#/lib/textModifiers';
+import { useRecogniserStore, useReplacements } from '#/store/recognizerStore';
 import { ApolloProvider, useMutation } from '@apollo/client/react';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect, useState } from 'react';
@@ -17,6 +17,7 @@ export default function Home() {
 	const { id, jwt } = useUser();
 
 	const { note, setNote, clearNote } = useRecogniserStore(state => state);
+	const { replacements } = useReplacements(state => state);
 
 	const [creatNote] = useMutation(CREATE_NOTE, {
 		context: {
@@ -59,7 +60,7 @@ export default function Home() {
 					<Button
 						onClick={() => {
 							console.log('работает');
-							setNote(sentenceModify(note.replace(/точка/g, '. ')));
+							setNote(sentenceModify(replacer(note, replacements)));
 						}}>
 						Форматировать
 					</Button>

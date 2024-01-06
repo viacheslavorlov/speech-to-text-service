@@ -37,8 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						<div className='bg-red-600 text-center text-lg relative h-auto px-8 py-2'>
 							<Button
 								onClick={onCloseWarning}
-								className='rounded-full bg-red-600 absolute top-0 right-0 h-8 w-8 p-0'>
-								<X className='w-5 h-5' />
+								className='rounded-full bg-red-600 absolute top-1 right-2 h-8 w-8 py-0 px-0'>
+								<X className='w-6 h-6' />
 							</Button>
 							Разрешите странице использование микрофона.
 							Используйте Google Chrome или Yandex Browser

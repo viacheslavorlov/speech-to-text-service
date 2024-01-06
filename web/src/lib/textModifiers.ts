@@ -5,7 +5,10 @@ export const sentenceModify = (str: string) => {
 		.join('. ')
 };
 
-export const replacer = (str: string, substr: string, symbol: string) => {
-	console.log(str.replace(substr, symbol))
-	return str.replace(substr, symbol);
-}
+export const replacer = (str: string, replacements: {substring: string, symbol: string}[]) => {
+	let result = str
+	console.log(replacements)
+	replacements.forEach(repl => result = result.replace(new RegExp(repl.substring, 'g'), repl.symbol));
+	console.log(result)
+	return result;
+  }

@@ -63,7 +63,7 @@ export const useReplacements = create<Replacments>()(
 	devtools(
 		persist(
 			set => ({
-				replacements: [{ substring: ' точка', symbol: '.' }],
+				replacements: [{ substring: ' точка', symbol: '.' }, { substring: ' запятая', symbol: ',' }],
 				addReplacement: (substring, symbol) =>
 					set(state => ({
 						replacements: [...state.replacements, { substring, symbol }],
