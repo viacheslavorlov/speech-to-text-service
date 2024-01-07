@@ -34,8 +34,15 @@ export const NotesList = () => {
 	};
 
 	const onDeleteSelectedNotes = async () => {
-		selectedNotes.forEach(id => {
-			deleteNote({ variables: { id: id } })
+		selectedNotes.forEach(noteId => {
+			deleteNote({
+				variables: { id: noteId },
+				context: {
+					headers: {
+						Authorization: `Bearer ${jwt}`,
+					},
+				},
+			})
 				.then(() => refetch())
 				.then(() => setSelectedNotes([]));
 		});

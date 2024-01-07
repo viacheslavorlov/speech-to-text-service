@@ -2,7 +2,7 @@
 import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
-import { GET_ONE_NOTE, UPDATE_NOTE } from '#/gql';
+import { DELETE_NOTE, GET_ONE_NOTE, UPDATE_NOTE } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'next/navigation';
@@ -16,6 +16,15 @@ const NoteSLug = () => {
 			id: param.id,
 			userId: id,
 		},
+		context: {
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		},
+	});
+
+	const [deleteNote] = useMutation(DELETE_NOTE, {
+		variables: { id: param.id },
 		context: {
 			headers: {
 				Authorization: `Bearer ${jwt}`,
@@ -76,6 +85,7 @@ const NoteSLug = () => {
 				/>
 				<div className='flex w-full gap-6'>
 					<Button
+						onClick={() => deleteNote()}
 						variant='danger'
 						className='w-full'>
 						Удалить
