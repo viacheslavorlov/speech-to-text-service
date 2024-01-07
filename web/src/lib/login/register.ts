@@ -21,7 +21,7 @@ export const registerUser = async (
 ): Promise<AxiosResponse<UserData>['data'] | null > => {
 	try {
 		const { data } = await axios.post<UserData>(
-			'http://localhost:1337/api/auth/local/register',
+			'http://89.104.70.143:1337/api/auth/local/register',
 			userData
 		);
 		if (data.jwt) {
