@@ -389,6 +389,37 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
 }
 
+export interface ApiRuleRule extends Schema.CollectionType {
+  collectionName: 'rules';
+  info: {
+    singularName: 'rule';
+    pluralName: 'rules';
+    displayName: 'Rule';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    substring: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }>;
+    symbol: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::rule.rule', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::rule.rule', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -614,7 +645,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -647,6 +677,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToMany',
       'api::note.note'
+    >;
+    rules: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::rule.rule'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -720,6 +755,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::note.note': ApiNoteNote;
+      'api::rule.rule': ApiRuleRule;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;

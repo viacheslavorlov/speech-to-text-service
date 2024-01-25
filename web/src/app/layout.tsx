@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import './globals.css';
 import { Menu } from '#/components/widgets/Menu/Menu';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 // if (process.env.NODE_ENV === 'development') {
 // 	// Adds messages only in a dev environment
@@ -40,12 +41,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								className='rounded-full bg-red-600 absolute top-1 right-2 h-8 w-8 py-0 px-0'>
 								<X className='w-6 h-6' />
 							</Button>
-							Разрешите странице использование микрофона.
-							Используйте Google Chrome или Yandex Browser
+							Разрешите странице использование микрофона. Используйте Google Chrome
+							или Yandex Browser
 						</div>
 					)}
 					<Menu />
-					<ApolloProvider client={client}>{children}</ApolloProvider>
+					<ApolloProvider client={client}>
+						<AntdRegistry>{children}</AntdRegistry>
+					</ApolloProvider>
 				</main>
 			</body>
 		</html>

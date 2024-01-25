@@ -4,11 +4,12 @@ import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { CREATE_NOTE } from '#/gql';
+import { useUser } from '#/lib/login/userStore';
 import { sentenceModify } from '#/lib/textModifiers';
 import { useServerRecogniserStore } from '#/store/recognizerStore';
 import { useMutation } from '@apollo/client/react';
 import axios from 'axios';
-import { Delete, Mic, MicOff } from 'lucide-react';
+import { Delete, Mic } from 'lucide-react';
 import { ChangeEvent, useState } from 'react';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 
@@ -16,6 +17,7 @@ const RecorderComponent = () => {
 	const [audioData, setAudioData] = useState<any>(null);
 	const { note, setNote, clearNote } = useServerRecogniserStore();
 	const [error, setError] = useState(null);
+	const { jwt, id } = useUser();
 
 	const handleAudioData = (data: any) => {
 		console.log(data);
@@ -24,7 +26,14 @@ const RecorderComponent = () => {
 
 	const [creatNote] = useMutation(CREATE_NOTE);
 	const handelSendNote = () => {
-		creatNote({ variables: { note } });
+		creatNote({
+			variables: { note, user: id },
+			context: {
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			},
+		});
 	};
 
 	const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,11 +42,15 @@ const RecorderComponent = () => {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await axios.post('http://localhost:4000/transcribe', audioData, {
-				headers: {
-					'Content-Type': 'audio/webm',
-				},
-			});
+			const response = await axios.post(
+				process.env.NEXT_PUBLIC_LOCAL_SERVER_URL!,
+				audioData,
+				{
+					headers: {
+						'Content-Type': 'audio/webm',
+					},
+				}
+			);
 			setNote(note + response.data.text + '. ');
 		} catch (error: any) {
 			setError(error.message);

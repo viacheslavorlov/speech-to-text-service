@@ -11,6 +11,7 @@ import { ApolloProvider, useMutation } from '@apollo/client/react';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect, useState } from 'react';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
+import { Accordion } from '../components/Accordion';
 
 export default function Home() {
 	const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
@@ -56,6 +57,7 @@ export default function Home() {
 					placeholder='say something'
 					onChange={onCahge}
 				/>
+				<Accordion />
 				<div>
 					<Button
 						onClick={() => {

@@ -1,3 +1,4 @@
+
 import axios, { AxiosResponse } from 'axios';
 
 interface UserData {
@@ -21,7 +22,7 @@ export const registerUser = async (
 ): Promise<AxiosResponse<UserData>['data'] | null > => {
 	try {
 		const { data } = await axios.post<UserData>(
-			'http://89.104.70.143:1337/api/auth/local/register',
+			process.env.NEXT_PUBLIC_STRAPI_BASE_API + '/api/auth/local',
 			userData
 		);
 		if (data.jwt) {

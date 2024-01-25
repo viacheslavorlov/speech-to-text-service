@@ -9,8 +9,7 @@
     "displayName": "User"
   },
   "options": {
-    "draftAndPublish": false,
-    "timestamps": true
+    "draftAndPublish": false
   },
   "attributes": {
     "username": {
@@ -71,6 +70,11 @@
       "relation": "oneToMany",
       "target": "api::note.note",
       "mappedBy": "user"
+    },
+    "rules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rule.rule"
     }
   }
 }

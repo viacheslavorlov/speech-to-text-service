@@ -15,7 +15,7 @@ export default function Login() {
 	const [login, setLogin] = useState(true);
 	const [error, setError] = useState('');
 
-	const handleSubmit = async (e: SyntheticEvent) => {
+	async function handleSubmit(e: SyntheticEvent) {
 		e.preventDefault(); // Prevent the default form submission behavior
 		if (!formData.identifier || !formData.password) {
 			setError('Заполните все поля формы');
@@ -39,9 +39,9 @@ export default function Login() {
 			console.log(error);
 			// Handle any errors that occur during the form submission
 		}
-	};
+	}
 
-	const handleRegister = async (e: SyntheticEvent) => {
+	async function handleRegister(e: SyntheticEvent) {
 		e.preventDefault(); // Prevent the default form submission behavior
 		if (!registerData.email || !registerData.password || !registerData.username) {
 			setError('Заполните все поля формы');
@@ -65,7 +65,7 @@ export default function Login() {
 			console.log(error);
 			// Handle any errors that occur during the form submission
 		}
-	};
+	}
 
 	if (username && jwt) {
 		return (
