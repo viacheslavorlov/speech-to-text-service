@@ -25,7 +25,7 @@ export const useUser = create<UseUserStore>()(
 				setUsername: name => set({ username: name }),
 				setJwt: jwt => set({ jwt: jwt }),
 				setId: id => set({ id: id }),
-				logOut: () => set({ username: '', email: '', jwt: '' }),
+				logOut: () => set({ username: '', email: '', jwt: '', id: '' }),
 			}),
 			{
 				name: 'user-data',

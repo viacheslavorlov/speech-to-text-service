@@ -1,7 +1,7 @@
 
 import axios, { AxiosResponse } from 'axios';
 
-interface UserData {
+export interface UserData {
 	jwt: string;
 	user: {
 		username: string;
@@ -21,7 +21,7 @@ export const registerUser = async (
 	userData: Props
 ): Promise<AxiosResponse<UserData>['data'] | null > => {
 	try {
-		const { data } = await axios.post<UserData>(
+		const { data } = await axios.post(
 			process.env.NEXT_PUBLIC_STRAPI_BASE_API + '/api/auth/local',
 			userData
 		);
