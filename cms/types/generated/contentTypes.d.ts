@@ -380,6 +380,7 @@ export interface ApiNoteNote extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    title: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &

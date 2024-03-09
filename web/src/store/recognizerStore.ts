@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 interface RecogniserState {
+	title: string;
 	note: string;
 	time: Date;
+	setTitle: (title: string) => void;
 	setNote: (note: string) => void;
 	clearNote: () => void;
 	setTime: (time: Date) => void;
@@ -20,12 +22,14 @@ interface ServerRecogniserState {
 export const useRecogniserStore = create<RecogniserState>()(
 	devtools(
 		persist(
-			(set) => ({
+			set => ({
+				title: new Date().toLocaleString(),
 				note: '',
-				time: new Date (),
-				setNote: (note) => set({ note: note }),
+				time: new Date(),
+				setTitle: title => set({ title: title }),
+				setNote: note => set({ note: note }),
 				clearNote: () => set({ note: '' }),
-				setTime: (time) => set({ time:  time }),
+				setTime: time => set({ time: time }),
 			}),
 			{
 				name: 'note-storage',
@@ -34,16 +38,15 @@ export const useRecogniserStore = create<RecogniserState>()(
 	)
 );
 
-
 export const useServerRecogniserStore = create<ServerRecogniserState>()(
 	devtools(
 		persist(
-			(set) => ({
+			set => ({
 				note: '',
-				time: new Date (),
-				setNote: (note) => set({ note: note }),
+				time: new Date(),
+				setNote: note => set({ note: note }),
 				clearNote: () => set({ note: '' }),
-				setTime: (time) => set({ time:  time }),
+				setTime: time => set({ time: time }),
 			}),
 			{
 				name: 'server-note-storage',
@@ -63,7 +66,10 @@ export const useReplacements = create<Replacments>()(
 	devtools(
 		persist(
 			set => ({
-				replacements: [{ substring: ' точка', symbol: '.' }, { substring: ' запятая', symbol: ',' }],
+				replacements: [
+					{ substring: ' точка', symbol: '.' },
+					{ substring: ' запятая', symbol: ',' },
+				],
 				addReplacement: (substring, symbol) =>
 					set(state => ({
 						replacements: [...state.replacements, { substring, symbol }],

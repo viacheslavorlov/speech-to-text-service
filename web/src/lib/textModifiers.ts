@@ -1,3 +1,5 @@
+import type { Rule } from "#/app/types";
+
 export const sentenceModify = (str: string) => {
 	return str
 		.split('. ')
@@ -5,7 +7,7 @@ export const sentenceModify = (str: string) => {
 		.join('. ');
 };
 
-export const replacer = (str: string, replacements: { substring: string; symbol: string }[]) => {
+export const replacer = (str: string, replacements: Rule[]) => {
 	let result = str;
 	console.log(replacements);
 	replacements.forEach(

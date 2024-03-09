@@ -5,31 +5,31 @@ const recognizer = new Recognizer();
 
 type Props = {
 	setNote: (str: string) => void
-	onClear: () => void
+	// onClear: () => void
 	note: string
 }
 
-const WriteComponent = ({setNote, note, onClear}: Props) => {
+const WriteComponent = ({setNote, note, /* onClear */}: Props) => {
 	
 		recognizer.setSaveResultFunc(setNote);
 		recognizer.result = note;
 
-		const clear = () => {
-			onClear()
-			recognizer.stop()
-		}
+		// const clear = () => {
+		// 	onClear()
+		// 	recognizer.stop()
+		// }
 		
 
 		return (
 			
 					<div className='flex flex-col md:flex-row gap-4 justify-center'>
-						<Button
+						{/* <Button
 							rounded='m'
 							variant='danger'
 							className='md:w-40'
 							onClick={clear}>
 							Удалить <Delete />
-						</Button>
+						</Button> */}
 						<Button
 							rounded='m'
 							variant='secondary'

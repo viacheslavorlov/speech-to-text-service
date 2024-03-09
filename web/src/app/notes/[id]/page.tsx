@@ -2,6 +2,7 @@
 import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
+import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
 import { DELETE_NOTE, GET_ONE_NOTE, UPDATE_NOTE } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { useMutation, useQuery } from '@apollo/client';
@@ -61,7 +62,7 @@ const NoteSLug = () => {
 	if (loading) {
 		console.log('loading');
 
-		return <h1>Loading</h1>;
+		return <LoadingSpinner/>;
 	}
 
 	if (error && !loading) {

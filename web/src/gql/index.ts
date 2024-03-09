@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+
+
 export const GET_NOTES = gql`
 	query GetNotes($userId: ID!) {
 		notes(filters: { user: { id: { eq: $userId } } }) {
@@ -7,6 +9,7 @@ export const GET_NOTES = gql`
 				id
 				attributes {
 					content
+					title
 					user {
 						data {
 							attributes {
@@ -22,10 +25,11 @@ export const GET_NOTES = gql`
 
 export const GET_ONE_NOTE = gql`
 	query GetOneNote($userId: ID!, $id: ID!) {
-		notes(filters: { user: { id: { eq: $userId } }, id: {eq: $id} }) {
+		notes(filters: { user: { id: { eq: $userId } }, id: { eq: $id } }) {
 			data {
 				id
 				attributes {
+					title
 					content
 					createdAt
 					user {
@@ -42,8 +46,8 @@ export const GET_ONE_NOTE = gql`
 `;
 
 export const CREATE_NOTE = gql`
-	mutation CreateNote($note: String!, $user: ID!) {
-		createNote(data: { content: $note, user: $user }) {
+	mutation CreateNote($title: String!, $note: String!, $user: ID!) {
+		createNote(data: { content: $note, user: $user, title: $title }) {
 			data {
 				id
 			}
@@ -57,7 +61,7 @@ export const DELETE_NOTE = gql`
 			data {
 				id
 				attributes {
-					content
+					title
 				}
 			}
 		}
@@ -65,8 +69,8 @@ export const DELETE_NOTE = gql`
 `;
 
 export const UPDATE_NOTE = gql`
-	mutation UpdateNote($id: ID!, $content: String!) {
-		updateNote(id: $id, data: { content: $content }) {
+	mutation UpdateNote($id: ID!, $content: String!, $title: String!) {
+		updateNote(id: $id, data: { content: $content, title: $title }) {
 			data {
 				id
 				attributes {
@@ -76,6 +80,7 @@ export const UPDATE_NOTE = gql`
 		}
 	}
 `;
+
 
 
 export const GET_RULES = gql`

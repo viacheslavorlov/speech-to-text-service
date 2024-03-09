@@ -24,6 +24,8 @@ export const NotesList = () => {
 	const [deleteNote] = useMutation(DELETE_NOTE);
 	const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
 	const ulRef = useRef<HTMLUListElement>(null);
+	console.log(data);
+	
 
 	const handleNoteCheckboxChange = (id: string) => {
 		if (selectedNotes.includes(id)) {
@@ -62,7 +64,7 @@ export const NotesList = () => {
 				ref={ulRef}
 				className='flex flex-col gap-4'>
 				{notes &&
-					notes.map((item: { attributes: { content: string }; id: string }) => (
+					notes.map((item: { attributes: { content: string, title:string }; id: string }) => (
 						<li
 							key={item.id}
 							className={

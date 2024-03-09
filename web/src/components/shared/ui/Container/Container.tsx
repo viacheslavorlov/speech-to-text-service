@@ -8,6 +8,6 @@ export const Container = ({
 	className?: string;
 }) => {
 	return (
-		<section className={clsx('flex flex-col p-6 md:p-12 gap-5', className)}>{children}</section>
+		<section className={clsx('flex flex-col p-6 md:p-12 gap-5 max-w-screen-xl mx-auto', className)}>{children}</section>
 	);
 };

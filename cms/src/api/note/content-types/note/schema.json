@@ -21,6 +21,10 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "notes"
+    },
+    "title": {
+      "type": "string",
+      "required": true
     }
   }
 }
