@@ -33,7 +33,7 @@ export const Textarea = forwardRef(
 				ref={ref}
 					placeholder={placeholder}
 					value={value}
-					className='p-4 rounded-2xl text-black appearance-none h-full flex-grow'
+					className='p-4 rounded-2xl text-black appearance-none h-full flex-grow whitespace-pre-wrap'
 					onChange={onCahge}
 				/>
 			</div>

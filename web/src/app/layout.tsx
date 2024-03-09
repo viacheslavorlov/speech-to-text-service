@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import './globals.css';
 import { Menu } from '#/components/widgets/Menu/Menu';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider } from 'antd';
 
 // if (process.env.NODE_ENV === 'development') {
 // 	// Adds messages only in a dev environment
@@ -47,7 +48,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					)}
 					<Menu />
 					<ApolloProvider client={client}>
-						<AntdRegistry>{children}</AntdRegistry>
+						<AntdRegistry>
+							<ConfigProvider theme={{
+								token: {
+									colorBgBase: 'rgb(30 41 59)',
+									colorText: '#fff'
+								}
+							}}>{children}</ConfigProvider>
+						</AntdRegistry>
 					</ApolloProvider>
 				</main>
 			</body>

@@ -38,6 +38,7 @@ export const Menu = () => {
 			<Suspense fallback=''>
 				<div className='flex justify-between items-center md:hidden'>
 					<Image
+						priority
 						src={'/kandinsky-3-logo.png'}
 						width={300}
 						height={200}

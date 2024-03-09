@@ -76,3 +76,18 @@ export const UPDATE_NOTE = gql`
 		}
 	}
 `;
+
+
+export const GET_RULES = gql`
+	query GetRules {
+		rules {
+			data {
+				id
+				attributes {
+					substring
+					symbol
+				}
+			}
+		}
+	}
+`;
