@@ -6,9 +6,24 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '../../shared/ui/Button/Button';
+import { textAdapt } from '../../../lib/textAdapt';
+import axios from 'axios';
+async function getNotesListPageData(jwt: string) {
+	const data = await axios.get(
+		process.env.NEXT_PUBLIC_STRAPI_BASE_API + '/api/notes-list-page-data',
+		{
+			headers: {
+				'Authorization': 'Bearer ' + jwt
+			}
+		}
+	);
+	return data.data.data.attributes;
+}
 
-export const NotesList = () => {
+export const NotesList = async () => {
 	const { jwt, id } = useUser();
+	getNotesListPageData(jwt)
+
 	const { data, loading, error, networkStatus, refetch } = useQuery(GET_NOTES, {
 		fetchPolicy: 'no-cache',
 		context: {
@@ -25,7 +40,6 @@ export const NotesList = () => {
 	const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
 	const ulRef = useRef<HTMLUListElement>(null);
 	console.log(data);
-	
 
 	const handleNoteCheckboxChange = (id: string) => {
 		if (selectedNotes.includes(id)) {
@@ -64,32 +78,36 @@ export const NotesList = () => {
 				ref={ulRef}
 				className='flex flex-col gap-4'>
 				{notes &&
-					notes.map((item: { attributes: { content: string, title:string }; id: string }) => (
-						<li
-							key={item.id}
-							className={
-								'flex flex-col md:flex-row justify-between  items-center gap-4'
-							}>
-							<div className='flex flex-col md:flex-row border-b w-full'>
-								<input
-									id={`note-${item.id}`}
-									type='checkbox'
-									name='delete-checkbox'
-									className='p-4 mr-4 hidden md:block'
-									checked={selectedNotes.includes(item.id)}
-									onChange={() => handleNoteCheckboxChange(item.id)}
-								/>
-								<p className='p-4'>{item.id}</p>
-								<p className='text-justify'>{item.attributes.content}</p>
-							</div>
+					notes.map(
+						(item: { attributes: { content: string; title: string }; id: string }) => (
+							<li
+								key={item.id}
+								className={
+									'flex flex-col md:flex-row justify-between  items-center gap-4'
+								}>
+								<div className='flex flex-col md:flex-row items-center border-b w-full'>
+									<input
+										id={`note-${item.id}`}
+										type='checkbox'
+										name='delete-checkbox'
+										className='p-4 mr-4 hidden md:block'
+										checked={selectedNotes.includes(item.id)}
+										onChange={() => handleNoteCheckboxChange(item.id)}
+									/>
+									<p className='p-4'>{item.id}</p>
+									<p className='text-justify'>
+										{textAdapt(item.attributes.title, 35, true)}
+									</p>
+								</div>
 
-							<Link
-								className='w-full md:w-auto'
-								href={`notes/${item.id}`}>
-								<Button className='w-full md:w-auto'>Подробно</Button>
-							</Link>
-						</li>
-					))}
+								<Link
+									className='w-full md:w-auto'
+									href={`notes/${item.id}`}>
+									<Button className='w-full md:w-auto'>Подробно</Button>
+								</Link>
+							</li>
+						)
+					)}
 			</ul>
 			<Button
 				variant='danger'

@@ -390,6 +390,76 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
 }
 
+export interface ApiNotesListPageDataNotesListPageData
+  extends Schema.SingleType {
+  collectionName: 'notes_list_page_datas';
+  info: {
+    singularName: 'notes-list-page-data';
+    pluralName: 'notes-list-page-datas';
+    displayName: 'NotesListPageData';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    title: Attribute.String &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.DefaultTo<'\u0412\u0441\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438'>;
+    detailsButton: Attribute.String &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.SetMinMaxLength<{
+        maxLength: 15;
+      }> &
+      Attribute.DefaultTo<'\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435'>;
+    deleteButton: Attribute.String &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::notes-list-page-data.notes-list-page-data',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::notes-list-page-data.notes-list-page-data',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::notes-list-page-data.notes-list-page-data',
+      'oneToMany',
+      'api::notes-list-page-data.notes-list-page-data'
+    >;
+    locale: Attribute.String;
+  };
+}
+
 export interface ApiRuleRule extends Schema.CollectionType {
   collectionName: 'rules';
   info: {
@@ -756,6 +826,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::note.note': ApiNoteNote;
+      'api::notes-list-page-data.notes-list-page-data': ApiNotesListPageDataNotesListPageData;
       'api::rule.rule': ApiRuleRule;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;

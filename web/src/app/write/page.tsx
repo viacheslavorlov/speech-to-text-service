@@ -3,19 +3,20 @@ import { client } from '#/apolo-client';
 import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
+import { Input } from '#/components/shared/ui/Input/Input';
 import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
 import { CREATE_NOTE, GET_RULES } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { replacer, sentenceModify } from '#/lib/textModifiers';
-import { Input } from '#/shared/ui/Input/Input';
 import { useRecogniserStore, useReplacements } from '#/store/recognizerStore';
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client/react';
+import { X } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect } from 'react';
 import { Accordion } from '../components/Accordion';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
-import { X } from 'lucide-react';
+import { Rule } from '../../../../.history/web/src/app/types/Rule_20240309220615';
 
 if (process.env.NODE_ENV === 'development') {
 	// Adds messages only in a dev environment
@@ -76,11 +77,22 @@ export default function Home() {
 						<Input
 							id='title'
 							value={title}
+							placeholder='Введите название заметки'
 							onChange={e => setTitle(e.target.value)}
 						/>
-						<Button onClick={()=> setTitle('')} variant='danger' className='absolute p-1 bottom-3 right-4 z-30'><X width={24} height={24} className='stroke-white'/></Button>
+						<Button
+							onClick={() => setTitle('')}
+							variant='danger'
+							rounded='l'
+							className='absolute p-0 bottom-4 right-2 z-30'>
+							<X
+								width={24}
+								height={24}
+								className='stroke-white p-1'
+							/>
+						</Button>
 					</div>
-					<div  className='flex flex-col gap-2 relative'>
+					<div className='flex flex-col gap-2 relative'>
 						<label htmlFor='note'>Содержание заметки: </label>
 						<Textarea
 							id={'note'}
@@ -92,9 +104,9 @@ export default function Home() {
 						<Button
 							rounded='l'
 							variant='danger'
-							className='absolute bottom-3 right-4 p-1'
-							onClick={() =>setNote('')}>
-							<X size={24} />
+							className='absolute bottom-3 right-2 p-0'
+							onClick={() => setNote('')}>
+							<X size={24} className='p-1' />
 						</Button>
 					</div>
 					{data.rules.data.length && <Accordion items={data.rules.data} />}
@@ -105,7 +117,7 @@ export default function Home() {
 									sentenceModify(
 										replacer(
 											note,
-											data.rules.data.map(rule => rule.attributes)
+											data.rules.data.map((rule: Rule) => rule.attributes)
 										)
 									)
 								);

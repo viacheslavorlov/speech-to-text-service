@@ -1,0 +1,50 @@
+{
+  "kind": "singleType",
+  "collectionName": "notes_list_page_datas",
+  "info": {
+    "singularName": "notes-list-page-data",
+    "pluralName": "notes-list-page-datas",
+    "displayName": "NotesListPageData"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "default": "Все заметки"
+    },
+    "detailsButton": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "default": "Подробнее",
+      "maxLength": 15
+    },
+    "deleteButton": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "maxLength": 20
+    }
+  }
+}
