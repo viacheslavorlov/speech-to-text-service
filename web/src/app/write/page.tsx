@@ -14,9 +14,9 @@ import { ApolloProvider, useMutation, useQuery } from '@apollo/client/react';
 import { X } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect } from 'react';
+import { Rule } from '../../../../.history/web/src/app/types/Rule_20240309220615';
 import { Accordion } from '../components/Accordion';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
-import { Rule } from '../../../../.history/web/src/app/types/Rule_20240309220615';
 
 if (process.env.NODE_ENV === 'development') {
 	// Adds messages only in a dev environment
@@ -32,13 +32,14 @@ export default function Home() {
 	const { note, setNote, clearNote, title, setTitle } = useRecogniserStore(state => state);
 	const { replacements } = useReplacements(state => state);
 
-	const [createNote] = useMutation(CREATE_NOTE, {
+	const [createNote, {data: sendResult, loading:sendLoading,  error: sendError}] = useMutation(CREATE_NOTE, {
 		context: {
 			headers: {
 				Authorization: `Bearer ${jwt}`,
 			},
 		},
 	});
+	console.log(sendResult)
 
 	const { data, loading, error } = useQuery(GET_RULES, {
 		context: {
@@ -53,7 +54,9 @@ export default function Home() {
 	};
 
 	const handelSendNote = () => {
-		createNote({ variables: { title, note, user: id } });
+		console.log('1',sendLoading)
+		createNote({ variables: { title: title || new Date().toLocaleString(), note, user: id } });
+		console.log('2', sendLoading)
 	};
 
 	useLayoutEffect(() => {
@@ -69,7 +72,9 @@ export default function Home() {
 					<WriteComponentDynamic
 						setNote={setNote}
 						// onClear={clearNote}
+						sendNote={handelSendNote}
 						note={note}
+						disable={sendLoading}
 					/>
 					<h2 className='text-4xl font-bold'>Результат</h2>
 					<div className='flex flex-col gap-2 relative'>
@@ -84,11 +89,11 @@ export default function Home() {
 							onClick={() => setTitle('')}
 							variant='danger'
 							rounded='l'
-							className='absolute p-0 bottom-4 right-2 z-30'>
+							padding='1'
+							className='absolute bottom-3 right-2 z-30 h-8 w-8'>
 							<X
-								width={24}
-								height={24}
-								className='stroke-white p-1'
+								size={24}
+								className='stroke-white'
 							/>
 						</Button>
 					</div>
@@ -103,10 +108,14 @@ export default function Home() {
 						/>
 						<Button
 							rounded='l'
+							padding='1'
 							variant='danger'
-							className='absolute bottom-3 right-2 p-0'
+							className='absolute bottom-3 right-2'
 							onClick={() => setNote('')}>
-							<X size={24} className='p-1' />
+							<X
+								size={24}
+								className=' stroke-white '
+							/>
 						</Button>
 					</div>
 					{data.rules.data.length && <Accordion items={data.rules.data} />}
@@ -130,11 +139,6 @@ export default function Home() {
 							Добавить правила
 						</Button>
 					</div>
-					<Button
-						variant='secondary'
-						onClick={handelSendNote}>
-						Отправить в БД
-					</Button>
 				</Container>
 			</ApolloProvider>
 		);

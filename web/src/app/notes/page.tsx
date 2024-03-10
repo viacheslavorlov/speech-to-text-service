@@ -1,21 +1,18 @@
-'use client';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { NotesListDynamic } from '#/components/widgets/NotesList/NotesListDynamic';
+import type { NotesListPageDataEntityResponse } from '#/graphql/__generated__/graphql';
 import { useUser } from '#/lib/login/userStore';
+import axios from 'axios';
 import { redirect } from 'next/navigation';
-import { useLayoutEffect } from 'react';
 
-export default function Notes() {
-	const { username } = useUser();
-	useLayoutEffect(() => {
-		if (!username) {
-			redirect('/forbidden');
-		}
-	}, [username]);
+
+export default async function Notes() {
 	return (
 		<Container>
-			<h1 className='text-3xl font-bold'>Заметки</h1>
-			<NotesListDynamic />
+			<NotesListDynamic
+				// deleteButton={pageData?.deleteButton}
+				// detaisButton={pageData?.detailsButton}
+			/>
 		</Container>
 	);
 }

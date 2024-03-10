@@ -96,3 +96,18 @@ export const GET_RULES = gql`
 		}
 	}
 `;
+
+export const GET_NOTES_PAGE_DATA = gql`
+	query GetNotesPageData {
+		notesListPageData {
+			data {
+				attributes {
+					title
+					detailsButton
+					deleteButton
+				
+				}
+			}
+		}
+	}
+`;
