@@ -1,14 +1,12 @@
 import { Container } from '#/components/shared/ui/Container/Container';
 import { NotesListDynamic } from '#/components/widgets/NotesList/NotesListDynamic';
-import type { NotesListPageDataEntityResponse } from '#/graphql/__generated__/graphql';
-import { useUser } from '#/lib/login/userStore';
-import axios from 'axios';
-import { redirect } from 'next/navigation';
+import { Search } from '#/components/widgets/Search';
 
 
 export default async function Notes() {
 	return (
 		<Container>
+			<Search/>
 			<NotesListDynamic
 				// deleteButton={pageData?.deleteButton}
 				// detaisButton={pageData?.detailsButton}

@@ -1,8 +1,8 @@
 'use client';
 
-import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
+import { Textarea } from '#/components/shared/ui/Textarea';
 import { CREATE_NOTE } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { sentenceModify } from '#/lib/textModifiers';

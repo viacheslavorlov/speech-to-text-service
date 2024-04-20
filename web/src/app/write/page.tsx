@@ -1,6 +1,7 @@
 'use client';
 import { client } from '#/apolo-client';
-import { Textarea } from '#/components/shared/Textarea';
+import type { Rule } from '#/app/types';
+import { Textarea } from '#/components/shared/ui/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { Input } from '#/components/shared/ui/Input/Input';
@@ -14,7 +15,6 @@ import { ApolloProvider, useMutation, useQuery } from '@apollo/client/react';
 import { X } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useLayoutEffect } from 'react';
-import { Rule } from '../../../../.history/web/src/app/types/Rule_20240309220615';
 import { Accordion } from '../components/Accordion';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
 
@@ -126,7 +126,7 @@ export default function Home() {
 									sentenceModify(
 										replacer(
 											note,
-											data.rules.data.map((rule: Rule) => rule.attributes)
+											data.rules.data.map((rule: {attributes: Rule, }) => rule.attributes)
 										)
 									)
 								);

@@ -1,6 +1,7 @@
 'use client';
 import { Error } from '#/components/shared/Error/Error';
 import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
+import { NoteCard } from '#/components/shared/ui/NoteCard';
 import { DELETE_NOTE, GET_NOTES, GET_NOTES_PAGE_DATA } from '#/gql';
 import {
 	NotesListPageDataEntityResponse,
@@ -8,10 +9,8 @@ import {
 } from '#/graphql/__generated__/graphql';
 import { useUser } from '#/lib/login/userStore';
 import { useMutation, useQuery } from '@apollo/client';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Suspense, useLayoutEffect, useRef, useState } from 'react';
-import { textAdapt } from '../../../lib/textAdapt';
 import { Button } from '../../shared/ui/Button/Button';
 
 export function NotesList() {
@@ -21,14 +20,14 @@ export function NotesList() {
 		if (!jwt || !id) {
 			push('/forbidden');
 		}
-	}, []);
+	}, [id, jwt, push]);
 	// const pageData = await getNotesListPageData(jwt)
 	const {
 		data: pageData,
 		loading: pageLoading,
 		error: pageError,
 	} = useQuery<{ notesListPageData: NotesListPageDataEntityResponse }>(GET_NOTES_PAGE_DATA);
-	console.log(pageData);
+	console.log('pageData', pageData);
 
 	const { data, loading, error, networkStatus, refetch } = useQuery<{
 		notes: NoteEntityResponseCollection;
@@ -47,7 +46,7 @@ export function NotesList() {
 	const [deleteNote] = useMutation(DELETE_NOTE);
 	const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
 	const ulRef = useRef<HTMLUListElement>(null);
-	console.log(data);
+	console.log('data, id, jwt', data, id, jwt);
 
 	const handleNoteCheckboxChange = (id: string) => {
 		if (selectedNotes.includes(id)) {
@@ -85,37 +84,16 @@ export function NotesList() {
 					className='flex flex-col gap-4'>
 					{notes &&
 						notes.map(item => (
-							<li
+							<NoteCard
+								detailsButton={
+									pageData.notesListPageData.data?.attributes?.detailsButton ||
+									'Подробнее'
+								}
+								handleNoteCheckboxChange={handleNoteCheckboxChange} //@ts-ignore
+								item={item}
 								key={item.id}
-								className={
-									'flex flex-col md:flex-row justify-between  items-center gap-4'
-								}>
-								<div className='flex flex-col md:flex-row items-center border-b w-full'>
-									<input
-										id={`note-${item.id}`}
-										type='checkbox'
-										name='delete-checkbox'
-										className='p-4 mr-4 hidden md:block'
-										checked={selectedNotes.includes(item?.id!)}
-										onChange={() => handleNoteCheckboxChange(item?.id!)}
-									/>
-									<p className='p-4'>{item.id}</p>
-									<p className='text-justify'>
-										{textAdapt(item?.attributes!.title, 35, true)}
-									</p>
-								</div>
-
-								<Link
-									className='w-full md:w-auto'
-									href={`notes/${item.id}`}>
-									<Button className='w-full md:w-auto'>
-										{
-											pageData?.notesListPageData.data?.attributes
-												?.detailsButton
-										}
-									</Button>
-								</Link>
-							</li>
+								selctedNotes={selectedNotes}
+							/>
 						))}
 				</ul>
 				<Button

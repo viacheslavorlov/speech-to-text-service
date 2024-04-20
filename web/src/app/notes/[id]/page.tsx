@@ -1,11 +1,13 @@
 'use client';
-import { Textarea } from '#/components/shared/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
+import { Textarea } from '#/components/shared/ui/Textarea';
 import { DELETE_NOTE, GET_ONE_NOTE, UPDATE_NOTE } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { useMutation, useQuery } from '@apollo/client';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ChangeEvent, Suspense, memo, useEffect, useState } from 'react';
 
@@ -62,7 +64,7 @@ const NoteSLug = () => {
 	if (loading) {
 		console.log('loading');
 
-		return <LoadingSpinner/>;
+		return <LoadingSpinner />;
 	}
 
 	if (error && !loading) {
@@ -70,8 +72,13 @@ const NoteSLug = () => {
 	}
 
 	return (
-		<Container>
-			<Suspense fallback={<h1>Loading...</h1>}>
+		<Container className='relative'>
+			<Suspense fallback={<LoadingSpinner />}>
+				<Link href={'/notes'}>
+					<Button className='absolute right-6 md:right-12 ml-auto w-36'>
+						<ArrowLeft /> Назад
+					</Button>
+				</Link>
 				<h1 className='font-bold text-2xl'>Заметка ID: {param.id}</h1>
 				<div className='w-auto  pb-4 border-b'>
 					{' '}

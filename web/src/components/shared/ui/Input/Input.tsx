@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 
 // Define generic props with a type parameter T
@@ -8,6 +9,7 @@ interface InputProps<T> {
 	onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 	type?: string;
 	placeholder?: string;
+	className?: string;
 }
 
 // Use the generic type parameter T for the component
@@ -18,6 +20,7 @@ export const Input = <T extends {}>({
 	onChange,
 	type = 'text',
 	placeholder = '',
+	className
 }: InputProps<T>) => {
 	// Internal state to manage uncontrolled component, using the generic type T
 	const [internalValue, setInternalValue] = useState<T | undefined>(defaultValue);
@@ -47,7 +50,7 @@ export const Input = <T extends {}>({
 			id={id}
 			type={type}
 			placeholder={placeholder}
-			className='rounded-2xl bg-white text-black p-4'
+			className={clsx('rounded-2xl bg-white text-black p-4', className)}
 			// Convert value to string for input value attribute
 			value={(value !== undefined ? value : internalValue) as unknown as string}
 			onChange={handleChange}
