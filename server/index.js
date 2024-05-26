@@ -33,12 +33,12 @@ app.post('/transcribe', (req, res) => {
     }
 
     // Transcribe the WAV file
-    const rec = new vosk.Recognizer({model, sampleRate});
+    const rec = new vosk.Recognizer({ model, sampleRate });
     const stream = fs.createReadStream(wavFileName);
     stream.on('data', (data) => {
       if (!rec.acceptWaveform(data)) {
         // continue processing, as this is not the final result
-        console.log('проблема не в стриме')
+        // console.log('проблема не в стриме')
       }
     });
     stream.on('end', () => {
