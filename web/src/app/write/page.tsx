@@ -18,13 +18,7 @@ import { useLayoutEffect } from 'react';
 import { Accordion } from '../components/Accordion';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
 
-if (process.env.NODE_ENV === 'development') {
-	// Adds messages only in a dev environment
 
-	loadDevMessages();
-
-	loadErrorMessages();
-}
 
 export default function Home() {
 	// const [isSpeaking, setIsSpeaking] = useState<boolean>(false);

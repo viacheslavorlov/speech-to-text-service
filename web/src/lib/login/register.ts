@@ -12,17 +12,17 @@ export interface UserData {
 }
 
 type Props = {
-	username: string
-	email: string
-	password: string
-}
+	username: string;
+	email: string;
+	password: string;
+};
 
 export const registerUser = async (
 	userData: Props
 ): Promise<AxiosResponse<UserData>['data'] | null > => {
 	try {
 		const { data } = await axios.post(
-			process.env.NEXT_PUBLIC_STRAPI_BASE_API + '/api/auth/local',
+			process.env.NEXT_PUBLIC_STRAPI_BASE_API + '/api/auth/local/register',
 			userData
 		);
 		if (data.jwt) {

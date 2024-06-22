@@ -99,7 +99,7 @@ export default function Login() {
 						<input
 							className='p-2 rounded-md text-black'
 							type='text'
-							name='identifier'
+							name='username'
 							placeholder='email или имя пользователя'
 							value={formData.identifier}
 							onChange={e => setFormData({ ...formData, identifier: e.target.value })}

@@ -12,6 +12,15 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { Suspense, useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '../../shared/ui/Button/Button';
+import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
+
+if (process.env.NODE_ENV === 'development') {
+	// Adds messages only in a dev environment
+
+	loadDevMessages();
+
+	loadErrorMessages();
+}
 
 export function NotesList() {
 	const { jwt, id } = useUser();
@@ -32,7 +41,7 @@ export function NotesList() {
 	const { data, loading, error, networkStatus, refetch } = useQuery<{
 		notes: NoteEntityResponseCollection;
 	}>(GET_NOTES, {
-		fetchPolicy: 'no-cache',
+		fetchPolicy: 'network-only',
 		context: {
 			headers: {
 				Authorization: `Bearer ${jwt}`,
