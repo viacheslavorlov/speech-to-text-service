@@ -4,7 +4,7 @@ import { NoteCard } from '#/components/shared/ui/NoteCard';
 import { Note } from '#/graphql/__generated__/graphql';
 import { useUser } from '#/lib/login/userStore';
 import { meilisearchClient } from '#/search/meilisearch';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 export const Search = () => {
 	const [query, setQuery] = useState('');
@@ -12,16 +12,18 @@ export const Search = () => {
 	const { id } = useUser();
 	console.log('results', results);
 
-	const handleSearch = useCallback(async () => {
-		// // e.preventDefault();
-		const searchResults = await meilisearchClient
-			.index('note') // Указываете имя индекса
-			.search(query, {
-				filter: [`user.id = ${id}`],
-			});
-		//@ts-ignore
-		setResults(searchResults.hits);
-	}, [query, id]);
+	const handleSearch = async () => {
+		if (query) {
+			await meilisearchClient.index('note').updateFilterableAttributes(['user.id']);
+			const searchResults = await meilisearchClient
+				.index('note') // Указываете имя индекса
+				.search(query, {
+					filter: [`user.id = ${id}`],
+				});
+			//@ts-ignore
+			setResults(searchResults.hits);
+		}
+	}
 	const debouncedSearch = useDebouncedCallback(handleSearch, 450);
 
 	useEffect(() => {
@@ -30,7 +32,7 @@ export const Search = () => {
 
 	return (
 		<div className='space-y-4'>
-			<form className='flex flex-col md:flex-row  items-center gap-2'>
+			<div className='flex flex-col md:flex-row  items-center gap-2'>
 				<h2 className='text-4xl font-bold'>Поиск: </h2>
 				<Input
 					className='text-black w-full'
@@ -40,7 +42,7 @@ export const Search = () => {
 					onChange={e => setQuery(e.target.value)}
 				/>
 				{/* <button type='submit'>Поиск</button> */}
-			</form>
+			</div>
 
 			{results.length > 0 && query.length > 0 && (
 				<>

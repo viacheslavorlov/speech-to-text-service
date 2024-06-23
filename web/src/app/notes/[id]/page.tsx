@@ -41,6 +41,7 @@ const NoteSLug = () => {
 		variables: {
 			id: param.id,
 			content: notteText,
+			title: data?.notes.data[0].attributes.title,
 		},
 		context: {
 			headers: {

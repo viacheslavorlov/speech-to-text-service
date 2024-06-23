@@ -10,6 +10,7 @@ export const GET_NOTES = gql`
 				attributes {
 					content
 					title
+					createdAt
 					user {
 						data {
 							attributes {
@@ -75,6 +76,7 @@ export const UPDATE_NOTE = gql`
 				id
 				attributes {
 					content
+					title
 				}
 			}
 		}

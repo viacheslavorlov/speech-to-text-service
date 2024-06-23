@@ -1,16 +1,15 @@
 'use client';
 import { client } from '#/apolo-client';
 import type { Rule } from '#/app/types';
-import { Textarea } from '#/components/shared/ui/Textarea';
 import { Button } from '#/components/shared/ui/Button/Button';
 import { Container } from '#/components/shared/ui/Container/Container';
 import { Input } from '#/components/shared/ui/Input/Input';
 import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
+import { Textarea } from '#/components/shared/ui/Textarea';
 import { CREATE_NOTE, GET_RULES } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { replacer, sentenceModify } from '#/lib/textModifiers';
 import { useRecogniserStore, useReplacements } from '#/store/recognizerStore';
-import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client/react';
 import { X } from 'lucide-react';
 import { redirect } from 'next/navigation';
@@ -18,22 +17,23 @@ import { useLayoutEffect } from 'react';
 import { Accordion } from '../components/Accordion';
 import { WriteComponentDynamic } from './components/WriteComponentDynamic';
 
-
-
 export default function Home() {
 	// const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
 	const { id, jwt } = useUser();
 	const { note, setNote, clearNote, title, setTitle } = useRecogniserStore(state => state);
 	const { replacements } = useReplacements(state => state);
 
-	const [createNote, {data: sendResult, loading:sendLoading,  error: sendError}] = useMutation(CREATE_NOTE, {
-		context: {
-			headers: {
-				Authorization: `Bearer ${jwt}`,
+	const [createNote, { data: sendResult, loading: sendLoading, error: sendError }] = useMutation(
+		CREATE_NOTE,
+		{
+			context: {
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
 			},
-		},
-	});
-	console.log(sendResult)
+		}
+	);
+	console.log(sendResult);
 
 	const { data, loading, error } = useQuery(GET_RULES, {
 		context: {
@@ -48,9 +48,11 @@ export default function Home() {
 	};
 
 	const handelSendNote = () => {
-		console.log('1',sendLoading)
+		console.log('1', sendLoading);
 		createNote({ variables: { title: title || new Date().toLocaleString(), note, user: id } });
-		console.log('2', sendLoading)
+		console.log('2', sendLoading);
+		setNote('');
+		setTitle('');
 	};
 
 	useLayoutEffect(() => {
@@ -104,7 +106,7 @@ export default function Home() {
 							rounded='l'
 							padding='1'
 							variant='danger'
-							className='absolute bottom-3 right-2'
+							className='absolute bottom-3 right-2  h-8 w-8'
 							onClick={() => setNote('')}>
 							<X
 								size={24}
@@ -120,7 +122,9 @@ export default function Home() {
 									sentenceModify(
 										replacer(
 											note,
-											data.rules.data.map((rule: {attributes: Rule, }) => rule.attributes)
+											data.rules.data.map(
+												(rule: { attributes: Rule }) => rule.attributes
+											)
 										)
 									)
 								);
