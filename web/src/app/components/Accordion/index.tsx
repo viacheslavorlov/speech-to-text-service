@@ -12,10 +12,8 @@ export const Accordion = ({
 	return (
 		<Collapse
 			items={items?.map(item => ({
-				
-				children: `${item.attributes.substring} -- ${item.attributes.symbol}`
-					
-				,
+				children: `${item.attributes.substring} --> ${item.attributes.symbol}`,
+
 				key: item.id,
 				label: item.attributes.substring,
 			}))}

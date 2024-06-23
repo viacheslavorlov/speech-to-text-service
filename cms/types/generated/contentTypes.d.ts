@@ -466,9 +466,10 @@ export interface ApiRuleRule extends Schema.CollectionType {
     singularName: 'rule';
     pluralName: 'rules';
     displayName: 'Rule';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     substring: Attribute.String &
@@ -481,9 +482,13 @@ export interface ApiRuleRule extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }>;
+    user: Attribute.Relation<
+      'api::rule.rule',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::rule.rule', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::rule.rule', 'oneToOne', 'admin::user'> &

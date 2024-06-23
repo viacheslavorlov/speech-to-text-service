@@ -74,7 +74,8 @@
     "rules": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::rule.rule"
+      "target": "api::rule.rule",
+      "mappedBy": "user"
     }
   }
 }

@@ -6,7 +6,8 @@ import { Container } from '#/components/shared/ui/Container/Container';
 import { Input } from '#/components/shared/ui/Input/Input';
 import { LoadingSpinner } from '#/components/shared/ui/LoadingSpinner';
 import { Textarea } from '#/components/shared/ui/Textarea';
-import { CREATE_NOTE, GET_RULES } from '#/gql';
+import { RuleCreation } from '#/components/widgets/RuleCreation/RuleCreator';
+import { CREATE_NOTE, CREATE_RULE, GET_RULES } from '#/gql';
 import { useUser } from '#/lib/login/userStore';
 import { replacer, sentenceModify } from '#/lib/textModifiers';
 import { useRecogniserStore, useReplacements } from '#/store/recognizerStore';
@@ -35,13 +36,31 @@ export default function Home() {
 	);
 	console.log(sendResult);
 
-	const { data, loading, error } = useQuery(GET_RULES, {
+	const {
+		data,
+		loading,
+		error,
+		refetch: rulesRefetch,
+	} = useQuery(GET_RULES, {
+		variables: {userId: id},
 		context: {
 			headers: {
 				Authorization: `Bearer ${jwt}`,
 			},
 		},
 	});
+	const [createRule, { loading: ruleLoading, error: ruleError }] = useMutation(CREATE_RULE, {
+		context: {
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		},
+	});
+	const onCreateRule = (e: MouseEvent, obj: Rule) => {
+		e.preventDefault();
+		createRule({ variables: obj });
+		rulesRefetch();
+	};
 
 	const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setNote(e.target.value);
@@ -64,7 +83,7 @@ export default function Home() {
 	if (data && !loading) {
 		return (
 			<ApolloProvider client={client}>
-				<Container>
+				<Container className='space-y-4 lg:space-y-6'>
 					<WriteComponentDynamic
 						setNote={setNote}
 						// onClear={clearNote}
@@ -72,7 +91,7 @@ export default function Home() {
 						note={note}
 						disable={sendLoading}
 					/>
-					<h2 className='text-4xl font-bold'>Результат</h2>
+					{/* <h2 className='text-4xl font-bold'>Результат</h2> */}
 					<div className='flex flex-col gap-2 relative'>
 						<label htmlFor='title'>Название заметки: </label>
 						<Input
@@ -99,7 +118,7 @@ export default function Home() {
 							id={'note'}
 							value={note}
 							chengable
-							placeholder='say something'
+							placeholder='нажмите на "Запись" и скажите то что хотите записать'
 							onChange={onChange}
 						/>
 						<Button
@@ -114,9 +133,7 @@ export default function Home() {
 							/>
 						</Button>
 					</div>
-					{data.rules.data.length && <Accordion items={data.rules.data} />}
-					<div>
-						<Button
+					<Button
 							onClick={() => {
 								setNote(
 									sentenceModify(
@@ -131,11 +148,15 @@ export default function Home() {
 							}}>
 							Форматировать
 						</Button>
-						<Button
-						//todo
-						>
-							Добавить правила
-						</Button>
+					{data.rules.data.length > 0 && <Accordion items={data.rules.data} />}
+					<div>
+						
+						<RuleCreation
+							disabled={ruleLoading}
+							createRule={onCreateRule}
+							userId={id.toString()}
+							jwt={jwt}
+						/>
 					</div>
 				</Container>
 			</ApolloProvider>

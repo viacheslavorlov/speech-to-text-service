@@ -13,8 +13,9 @@ export const Search = () => {
 	console.log('results', results);
 
 	const handleSearch = async () => {
+		await meilisearchClient.index('note').updateFilterableAttributes(['user.id']);
+
 		if (query) {
-			await meilisearchClient.index('note').updateFilterableAttributes(['user.id']);
 			const searchResults = await meilisearchClient
 				.index('note') // Указываете имя индекса
 				.search(query, {
@@ -22,6 +23,7 @@ export const Search = () => {
 				});
 			//@ts-ignore
 			setResults(searchResults.hits);
+			console.log(searchResults)
 		}
 	}
 	const debouncedSearch = useDebouncedCallback(handleSearch, 450);

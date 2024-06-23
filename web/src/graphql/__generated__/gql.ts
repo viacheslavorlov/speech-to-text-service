@@ -18,8 +18,9 @@ const documents = {
     "\n\tmutation CreateNote($title: String!, $note: String!, $user: ID!) {\n\t\tcreateNote(data: { content: $note, user: $user, title: $title }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t}\n": types.CreateNoteDocument,
     "\n\tmutation DeleteNote($id: ID!) {\n\t\tdeleteNote(id: $id) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.DeleteNoteDocument,
     "\n\tmutation UpdateNote($id: ID!, $content: String!, $title: String!) {\n\t\tupdateNote(id: $id, data: { content: $content, title: $title }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tcontent\n\t\t\t\t\ttitle\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.UpdateNoteDocument,
-    "\n\tquery GetRules {\n\t\trules {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.GetRulesDocument,
-    "\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.GetNotesPageDataDocument,
+    "\n\tquery GetRules($userId: ID!) {\n\t\trules(filters: { user: { id: { eq: $userId } } }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.GetRulesDocument,
+    "\n\tmutation CreateRule($substring: String!, $symbol: String!, $user: ID!) {\n\t\tcreateRule(data: { user: $user, substring: $substring, symbol: $symbol }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t}\n": types.CreateRuleDocument,
+    "\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.GetNotesPageDataDocument,
 };
 
 /**
@@ -59,11 +60,15 @@ export function gql(source: "\n\tmutation UpdateNote($id: ID!, $content: String!
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n\tquery GetRules {\n\t\trules {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery GetRules {\n\t\trules {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
+export function gql(source: "\n\tquery GetRules($userId: ID!) {\n\t\trules(filters: { user: { id: { eq: $userId } } }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery GetRules($userId: ID!) {\n\t\trules(filters: { user: { id: { eq: $userId } } }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t\tattributes {\n\t\t\t\t\tsubstring\n\t\t\t\t\tsymbol\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
+export function gql(source: "\n\tmutation CreateRule($substring: String!, $symbol: String!, $user: ID!) {\n\t\tcreateRule(data: { user: $user, substring: $substring, symbol: $symbol }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tmutation CreateRule($substring: String!, $symbol: String!, $user: ID!) {\n\t\tcreateRule(data: { user: $user, substring: $substring, symbol: $symbol }) {\n\t\t\tdata {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery GetNotesPageData {\n\t\tnotesListPageData {\n\t\t\tdata {\n\t\t\t\tattributes {\n\t\t\t\t\ttitle\n\t\t\t\t\tdetailsButton\n\t\t\t\t\tdeleteButton\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

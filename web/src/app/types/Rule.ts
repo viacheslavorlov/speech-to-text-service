@@ -1,4 +1,1 @@
-export type Rule = {
-	symbol: string;
-	substring: string;
-};
+export type Rule = { substring: string; symbol: string; user: string };

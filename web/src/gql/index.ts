@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-
-
 export const GET_NOTES = gql`
 	query GetNotes($userId: ID!) {
 		notes(filters: { user: { id: { eq: $userId } } }) {
@@ -82,18 +80,25 @@ export const UPDATE_NOTE = gql`
 		}
 	}
 `;
-
-
-
 export const GET_RULES = gql`
-	query GetRules {
-		rules {
+	query GetRules($userId: ID!) {
+		rules(filters: { user: { id: { eq: $userId } } }) {
 			data {
 				id
 				attributes {
 					substring
 					symbol
 				}
+			}
+		}
+	}
+`;
+
+export const CREATE_RULE = gql`
+	mutation CreateRule($substring: String!, $symbol: String!, $user: ID!) {
+		createRule(data: { user: $user, substring: $substring, symbol: $symbol }) {
+			data {
+				id
 			}
 		}
 	}
@@ -107,7 +112,6 @@ export const GET_NOTES_PAGE_DATA = gql`
 					title
 					detailsButton
 					deleteButton
-				
 				}
 			}
 		}

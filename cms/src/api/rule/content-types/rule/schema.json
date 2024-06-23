@@ -4,10 +4,11 @@
   "info": {
     "singularName": "rule",
     "pluralName": "rules",
-    "displayName": "Rule"
+    "displayName": "Rule",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -20,6 +21,12 @@
       "type": "string",
       "required": true,
       "minLength": 1
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "rules"
     }
   }
 }

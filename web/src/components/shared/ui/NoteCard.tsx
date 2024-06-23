@@ -30,7 +30,7 @@ export const NoteCard = (props: Props) => {
 					/>
 				)}
 				<p className='p-0 w-full lg:w-24 shrink-0 '><span className="lg:hidden font-bold text-xl">Номер: </span>{item.id}</p>
-				<p className='p-0 w-full lg:w-28 shrink-0 '><span className="lg:hidden font-bold text-xl">Дата: </span>{new Date(item.attributes?.createdAt).toLocaleDateString()}</p>
+				<p className='p-0 w-full lg:w-28 shrink-0 '><span className="lg:hidden font-bold text-xl">Дата: </span>{new Date(item?.attributes?.createdAt || item?.createdAt).toLocaleDateString() }</p>
 				<p className='w-full shrink-0 lg:w-48 text-justify'>
 					<span className="lg:hidden font-bold text-xl">Название: </span>
 					{textAdapt(item?.attributes?.title || item?.title, 35, true)}
