@@ -43,7 +43,7 @@ export const RuleCreation = ({ userId, jwt, disabled, createRule }: Props) => {
 					onChange={e => setSymbol(e.target.value)}
 				/>
 				<Button
-					disabled={disabled}
+					disabled={disabled}//@ts-ignore
 					onClick={e => onCreateRule(e)}
 					type='submit'>
 					Добавить правило
