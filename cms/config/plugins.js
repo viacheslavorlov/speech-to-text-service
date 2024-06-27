@@ -10,7 +10,7 @@ module.exports = ({ env }) => ({
 	meilisearch: {
 		config: {
 			// Your meili host
-			host: "http://localhost:7700",
+			host: "https://milisearch.speech-totext.ru",
 			// Your master key or private key
 			apiKey: "-8JQJrgf57f7n76wjhCpnkrwgRyNnnqpXEQ65DXFlqo",
 		},
