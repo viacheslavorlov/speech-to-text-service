@@ -1,30 +1,54 @@
 # Getting Started
 
-Сперва нужно запустить систему управления контентом для. Это нужно зайти в папку cms и выполнить команду:
-
-```shell
-yarn dev
-```
-
 Затем в этой же папке нужно запустить докер контейнер с поиском миллисерч (masterkey cгенерировать или смотреть в .env):
 
+## Генерация ключа и запуск milisearch
+
 ```shell
-docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=...masterKey...
+ sudo docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest meilisearch
 ```
+
+```shell
+sudo docker run -d --restart always -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=...masterKey...
+```
+
+Затем нужно добавить мастер ключ в переменные .env в папке cms. И этот же ключ добавить в пименные .env в папке web.
+Запустить strapi, зайти в папку cms и выполнить команду:
+
+```shell
+yarn build && yarn dev
+```
+
+и добавить коллекцию notes в milisearch plugin
 
 Затем можно запустить фронтенд. Зайдя в папку web:
 
 ```bash
-pnpm dev
+pnpm build && pnpm dev
 ```
 
+## Process manager
+
+Для запуска скриптовых, чтобы они работали после выключения консоли, нужно использовать ход смены и команду такого вида:
+
+```shell
+pm2 start pnpm --name "speach-totext-WEB" -- start
+```
+
+Проверить работоспособность процесс менеджера можно командой:
+
+```shell
+pm2 status
+```
+
+Остановка и запуск одного из процессов осуществляется командой.
+
+```shell
+pm2 <stop/start> <номер или название процесса>
+```
+
+## Fastpanel
+
+Если деплой осуществляется с помощью `Fastpanel` то запущенные процессы привязываются к адресам через обратный прокси.
+
 Открыть [http://localhost:3000](http://localhost:3000) со своего браузера.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
