@@ -75,11 +75,11 @@ export function NotesList() {
 
     if (networkStatus === 4 || error || pageError) return <Error />;
     if (loading && pageLoading) return <LoadingSpinner />;
-    if (data && pageData) {
+    if (data?.notes && pageData?.notesListPageData) {
         return (
             <Suspense>
                 <h1 className='text-4xl font-bold'>
-                    {pageData.notesListPageData.data?.attributes?.title}
+                    {pageData?.notesListPageData?.data?.attributes?.title}
                 </h1>
                 <FilterComponent filter={filter} setFilter={setFilter} />
                 <NotesListComponent
@@ -94,10 +94,12 @@ export function NotesList() {
                     rounded='m'
                     className='hidden md:block'
                     onClick={onDeleteSelectedNotes}>
-                    {pageData?.notesListPageData.data?.attributes?.deleteButton}
+                    {pageData?.notesListPageData?.data?.attributes?.deleteButton}
                 </Button>
             </Suspense>
         );
+    } else {
+        <h1>Заметки не найдены</h1>
     }
 }
 

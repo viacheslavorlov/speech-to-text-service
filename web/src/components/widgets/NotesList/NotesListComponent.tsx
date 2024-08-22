@@ -92,7 +92,7 @@ const NotesListComponent: React.FC<NotesListComponentProps> = ({
 
 	return (
 		<ul className='flex flex-col gap-4'>
-			{data &&
+			{data?.notes &&
 				notes().map(item => (
 					<NoteCard
 						detailsButton={
